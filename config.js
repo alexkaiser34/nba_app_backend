@@ -9,6 +9,12 @@ const config = {
         page: '0',
         per_page: '25',
         search: 'James'
+    },
+    db: {
+        host: "localhost",
+        user: "nba_user",
+        password: "nba_2023",
+        database: "nba_data"
     }
 };
 

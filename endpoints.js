@@ -1,64 +1,37 @@
-const customFetch = require('./fetchAPI');
 const endpoints = require('./config').endpoints;
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
- }
-
+const api_helper = require('./api_helper');
 
 async function getPlayersBySearch(search, pageOps){
-    let count = 0;
-    let done = false;
-    let arr = [];
 
-    const isPageOpsDef = typeof pageOps !== 'undefined'
+    const players_json = await api_helper.requestMultiplePages(
+        search,
+        endpoints().players,
+        pageOps
+    );
 
-    while (!done){
-        const response = await customFetch.fetch(
-            endpoints().players,
-            {
-                search: search,
-                per_page: !isPageOpsDef ? '100' : pageOps.per_page,
-                page:  !isPageOpsDef ? count.toString() : pageOps.number
-            }
-        );
-
-        arr.push(response);
-        if (typeof pageOps === 'undefined'){
-            if (response.length != 100){
-                done = true;
-            }
-            else {
-                count += 1;
-            }
-
-            if (count % 50 == 0){
-                await sleep(2 * 1000 * 60);
-            }
-        }
-        else{
-            break;
-        }
+    /** only store team id instead of team object */
+    for (player in players_json){
+        players_json[player].team = players_json[player].team.id;
     }
 
-    /**flatten array into a bunch of entries, create json object */
-    const ret = JSON.parse(JSON.stringify(arr.flat()));
-    return ret;
-
+    return players_json;
 }
 
 async function getPlayersById(id){
-    const response = await customFetch.fetch(endpoints(id).specificPlayer);
+    const response = await api_helper.fetch(endpoints(id).specificPlayer);
     return response;
 }
 
 async function getAllTeams(){
-    const response = await customFetch.fetch(endpoints().teams, {per_page: '30', page: '1'});
+    const response = await api_helper.fetch(
+        endpoints().teams,
+        {per_page: '30', page: '1'}
+    );
     return response;
 }
 
 async function getTeamsById(id){
-    const response = await customFetch.fetch(endpoints(id).specificTeam);
+    const response = await api_helper.fetch(endpoints(id).specificTeam);
     return response;
 }
 
@@ -67,103 +40,54 @@ async function getAllPlayers(){
     return allPlayers;
 }
 
-async function getAllGames(){
-    let count = 0;
-    let done = false;
-    let arr = [];
+async function getAllGames(pageOps){
 
-    while (!done){
-        const response = await customFetch.fetch(
-            endpoints().games,
-            {
-                per_page: '100',
-                page: count.toString()
-            }
-        );
+    const games_json = await api_helper.requestMultiplePages(
+        null,
+        endpoints().games,
+        pageOps
+    );
 
-        arr.push(response);
-        if (typeof pageOps === 'undefined'){
-            if (response.length != 100){
-                done = true;
-            }
-            else {
-                count += 1;
-            }
-
-            if (count % 50 == 0){
-                await sleep(1 * 1000 * 60);
-            }
-        }
-        else{
-            break;
-        }
+    /** only store game id instead of game object */
+    for (game in games_json){
+        games_json[game].visitor_team = games_json[game].visitor_team.id;
     }
 
-    /**flatten array into a bunch of entries, create json object */
-    const ret = JSON.parse(JSON.stringify(arr.flat()));
-    return ret;
+    return games_json;
 }
 
 async function getGameById(id){
-    const response = await customFetch.fetch(endpoints(id).specificGame);
+    const response = await api_helper.fetch(endpoints(id).specificGame);
     return response;
 }
 
-async function getAllStats(){
-    let count = 0;
-    let done = false;
-    let arr = [];
+async function getAllStats(search, pageOps){
 
-    while (!done){
-        const response = await customFetch.fetch(
-            endpoints().stats,
-            {
-                per_page: '100',
-                page: count.toString()
-            }
-        );
+    const stats_json = await api_helper.requestMultiplePages(
+        search,
+        endpoints().stats,
+        pageOps
+    );
 
-        arr.push(response);
-        if (typeof pageOps === 'undefined'){
-            if (response.length != 100){
-                done = true;
-            }
-            else {
-                count += 1;
-            }
-
-            if (count % 50 == 0){
-                await sleep(1 * 1000 * 60);
-            }
-
-            if (count % 500 == 0){
-                await sleep(30 * 1000 * 60);
-            }
-        }
-        else{
-            break;
-        }
-    }
-
-    /**flatten array into a bunch of entries, create json object */
-    const ret = JSON.parse(JSON.stringify(arr.flat()));
-    return ret;
+    return stats_json;
 }
 
+/** function to run large queries all at once */
 async function stressTest(){
     await getAllPlayers();
-    await sleep(30 * 1000 * 60);
+    await getAllTeams();
+    await api_helper.sleep(30 * 1000 * 60);
     await getAllGames();
-    await sleep(30 * 1000 * 60);
+    await api_helper.sleep(30 * 1000 * 60);
     await getAllStats();
 }
 
-stressTest();
 
 module.exports = {
     getPlayersBySearch,
     getPlayersById,
     getAllTeams,
+    getTeamsById,
     getPlayersById,
     getAllPlayers,
     getAllGames,
