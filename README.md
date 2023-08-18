@@ -14,3 +14,7 @@ CREATE USER 'nba_user'@'localhost' IDENTIFIED BY 'nba_2023';
 CREATE DATABASE nba_data;
 GRANT ALL PRIVILEGES ON nba_data.* TO 'nba_user'@'localhost' WITH GRANT OPTION;
 ```
+
+## Running Backend
+
+Run `npm start` from root of project to launch express server and backend.

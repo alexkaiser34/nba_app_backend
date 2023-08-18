@@ -9,13 +9,17 @@ const config = {
         page: '0',
         per_page: '25',
         search: 'James'
-    },
+    }
+};
+
+const db_config = {
     db: {
         host: "localhost",
         user: "nba_user",
         password: "nba_2023",
         database: "nba_data"
-    }
+    },
+    listPerPage: 10,
 };
 
 const endpoints = (id) => {
@@ -32,5 +36,6 @@ const endpoints = (id) => {
 
 module.exports = {
     config,
+    db_config,
     endpoints
 };
