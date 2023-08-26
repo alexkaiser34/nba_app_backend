@@ -1,4 +1,4 @@
-const endpoints = require('./endpoints');
+const endpoints = require('../api/endpoints');
 const db = require('./db');
 
 

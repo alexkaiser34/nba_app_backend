@@ -1,5 +1,5 @@
 const axios = require('axios');
-const apiParams = require('./config');
+const apiParams = require('../config');
 
 function hasNumber(myString) {
     return /\d/.test(myString);

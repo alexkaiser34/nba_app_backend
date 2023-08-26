@@ -1,4 +1,4 @@
-const endpoints = require('./config').endpoints;
+const endpoints = require('../config').endpoints;
 const api_helper = require('./api_helper');
 
 async function getPlayersBySearch(search, pageOps){
