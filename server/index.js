@@ -1,6 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const nbaPlayersRouter = require("./server/routes/nbaPlayers");
+const nbaPlayersRouter = require("./routes/nbaPlayers");
 const PORT = 3001;
 
 const app = express();
