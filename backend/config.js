@@ -1,14 +1,8 @@
 const config = {
     method: 'GET',
-    url: 'https://free-nba.p.rapidapi.com',
+    url: 'https://api.sportsdata.io/v3/nba',
     headers: {
-        'X-RapidAPI-Key': '74a26f4db2mshcfb2437a46108e4p1fa45ajsna8c07b3ea2b9',
-        'X-RapidAPI-Host': 'free-nba.p.rapidapi.com'
-    },
-    default_params: {
-        page: '0',
-        per_page: '25',
-        search: 'James'
+        'Ocp-Apim-Subscription-Key': 'b6a392907426420f9fbb33c5bd171ebb'
     }
 };
 
@@ -22,15 +16,40 @@ const db_config = {
     listPerPage: 10,
 };
 
-const endpoints = (id) => {
+const endpoints = (data) => {
     return {
-        players: '/players',
-        specificPlayer: `/players/${id}`,
-        teams: '/teams',
-        specificTeam: `/teams/${id}`,
-        games: '/games',
-        specificGame: `/games/${id}`,
-        stats: '/stats'
+        players: '/scores/json/Players',
+        teams: '/scores/json/teams',
+
+        // data = season (example: 2023)
+        schedule: `/scores/json/Games/${data}`,
+
+        // data = season (example: 2023)
+        standings: `/scores/json/Standings/${data}`,
+
+        // data = date (example: 2018-OCT-31)
+        teamGameStatsByDate: `/scores/json/TeamGameStatsByDate/${data}`,
+
+        // data = season (example: 2023)
+        teamSeasonStats: `/scores/json/TeamSeasonStats/${data}`,
+
+        // data = date (example: 2018-OCT-31)
+        playerProjectionsByDate: `/projections/json/PlayerGameProjectionStatsByDate/${data}`,
+
+        // data = season (example: 2023)
+        playerSeasonProjections: `/projections/json/PlayerSeasonProjectionStats/${data}`,
+
+        // data = date (example: 2018-OCT-31)
+        startingLineupsByDate: `/projections/json/StartingLineupsByDate/${data}`,
+
+        // data = date (example: 2018-OCT-31)
+        boxScoresByDate: `/stats/json/BoxScores/${data}`,
+
+        // data = date (example: 2018-OCT-31)
+        playerGameStatsByDate: `/stats/json/PlayerGameStatsByDate/${data}`,
+
+        // data = season (example: 2023)
+        playerSeasonStats: `/stats/json/PlayerSeasonStats/${data}`
     };
 };
 
