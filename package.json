@@ -5,9 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "api-bridge": "node api-bridge/index.js",
-    "backend": "node backend/index.js",
-    "start": "concurrently \"npm run api-bridge\" \"npm run backend\""
+    "start": "node index.js"
   },
   "author": "Alex Kaiser",
   "license": "ISC",

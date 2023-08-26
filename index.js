@@ -1,14 +1,14 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const db = require("../backend/db");
+const nbaPlayersRouter = require("./server/routes/nbaPlayers");
 const PORT = 3001;
 
-
 const app = express();
+
 app.use(bodyParser.json());
 
 app.use(
-    bodyParser.urlencoded({
+    express.urlencoded({
         extended: false,
     })
 );
@@ -17,15 +17,7 @@ app.get("/", (req, res) => {
     res.json({ message: "ok"});
 });
 
-app.post("/query", async function(req, res, next){
-    try {
-        res.json(await db.query(req.body.query));
-    } catch (err) {
-        console.log(`Error while making query`);
-        next(err);
-    }
-});
-
+app.use("/nbaPlayers", nbaPlayersRouter);
 
 /* Error handler middleware */
 app.use((err, req, res, next) => {
@@ -35,7 +27,7 @@ app.use((err, req, res, next) => {
     return;
 });
 
-
 app.listen(PORT, () => {
     console.log(`server listening on ${PORT}`);
 });
+
