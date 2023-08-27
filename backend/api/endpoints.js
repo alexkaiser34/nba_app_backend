@@ -1,6 +1,34 @@
 const endpoints = require('../config').endpoints;
 const api_helper = require('./api_helper');
 
+/**
+ * player params:
+ *  PlayerID: int
+ *  Status: string
+ *  TeamID: int
+ *  Jersey: int
+ *  Position: string
+ *  FirstName: string
+ *  LastName: string
+ *  Height: int (inches)
+ *  Weight: int (lbs)
+ *  BirthDate: string
+ *  BirthCity: string
+ *  BirthState: string
+ *  BirthCountry: string
+ *  College: string
+ *  Salary: int
+ *  Experience: int (years)
+ *  FanDuelPlayerID: int
+ *  DraftKingsPlayerID: int
+ *  NbaDotComPlayerID: int --> use for headshots
+ * @returns players_json
+ */
+async function updatePlayers(){
+    const players_json = await api_helper.fetch(endpoints().players);
+    return players_json;
+}
+
 async function getPlayersBySearch(search, pageOps){
 
     const players_json = await api_helper.requestMultiplePages(
@@ -92,6 +120,7 @@ module.exports = {
     getAllPlayers,
     getAllGames,
     getGameById,
-    getAllStats
+    getAllStats,
+    updatePlayers
 }
 
