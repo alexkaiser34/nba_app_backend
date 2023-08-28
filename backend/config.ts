@@ -1,4 +1,4 @@
-const config = {
+export const config = {
     method: 'GET',
     url: 'https://api.sportsdata.io/v3/nba',
     headers: {
@@ -6,7 +6,7 @@ const config = {
     }
 };
 
-const db_config = {
+export const db_config = {
     db: {
         host: "localhost",
         user: "nba_user",
@@ -16,7 +16,7 @@ const db_config = {
     listPerPage: 10,
 };
 
-const endpoints = (data) => {
+export const endpoints = (data?: string) => {
     return {
         players: '/scores/json/Players',
         teams: '/scores/json/teams',
@@ -40,21 +40,13 @@ const endpoints = (data) => {
         playerSeasonProjections: `/projections/json/PlayerSeasonProjectionStats/${data}`,
 
         // data = date (example: 2018-OCT-31)
-        startingLineupsByDate: `/projections/json/StartingLineupsByDate/${data}`,
-
-        // data = date (example: 2018-OCT-31)
         boxScoresByDate: `/stats/json/BoxScores/${data}`,
 
         // data = date (example: 2018-OCT-31)
+        // NOTE: prob dont need, seems like box score has this already
         playerGameStatsByDate: `/stats/json/PlayerGameStatsByDate/${data}`,
 
         // data = season (example: 2023)
         playerSeasonStats: `/stats/json/PlayerSeasonStats/${data}`
     };
-};
-
-module.exports = {
-    config,
-    db_config,
-    endpoints
 };
