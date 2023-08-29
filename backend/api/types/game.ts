@@ -16,12 +16,9 @@ export interface Game{
 export interface Quarter{
     Number: number,
     GameID: number,
+    QuarterID: number,
     AwayScore: number,
     HomeScore: number
-}
-
-export interface BoxScore {
-    Quarters: Quarter[]
 }
 
 export const templateGame: Game = {
@@ -39,6 +36,10 @@ export const templateGame: Game = {
     OverUnder: 0
 };
 
-export const templateBoxScore: BoxScore = {
-    Quarters: []
-};
+export const templateQuarter: Quarter = {
+    GameID: 0,
+    Number: 0,
+    AwayScore: 0,
+    QuarterID: 0,
+    HomeScore: 0
+}

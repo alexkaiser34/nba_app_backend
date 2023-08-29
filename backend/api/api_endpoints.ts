@@ -2,7 +2,7 @@ import { Player, templatePlayer } from './types/player';
 import { getArray } from './api_helper';
 import { endpoints } from '../config';
 import { Team, templateTeam } from './types/team';
-import { BoxScore, Game, templateBoxScore, templateGame } from './types/game';
+import { Game, Quarter, templateGame, templateQuarter } from './types/game';
 import { Standings, templateStandings } from './types/standings';
 import { templateTeamSeasonStats,
          templateTeamGameStats,
@@ -43,8 +43,8 @@ export async function getTeamSeasonStats(year: string): Promise<TeamStatSeason[]
     return getArray(templateTeamSeasonStats, endpoints(year).teamSeasonStats);
 }
 
-export async function getBoxScores(date: string): Promise<BoxScore[]>{
-    return getArray(templateBoxScore, endpoints(date).boxScoresByDate);
+export async function getBoxScores(date: string): Promise<Quarter[]>{
+    return getArray(templateQuarter, endpoints(date).boxScoresByDate);
 }
 
 export async function getPlayerStatsByDate(date: string):Promise<PlayerStatGame[]>{

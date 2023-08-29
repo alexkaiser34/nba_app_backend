@@ -2,7 +2,7 @@ import { config } from "../config";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { BlankUrl, HeadshotUrl, Player } from "./types/player";
 import { TeamStatSeason } from "./types/stats";
-import { BoxScore, Quarter, templateBoxScore } from "./types/game";
+import { Quarter } from "./types/game";
 
 function hasNumber(myString) {
     return /\d/.test(myString);
@@ -20,8 +20,8 @@ function isTeamSeasonStats(object: any): object is TeamStatSeason {
     return 'OpponentStat' in object;
 }
 
-function isBoxScore(object: any): object is BoxScore {
-    return 'Quarters' in object;
+function isQuarter(object: any): object is Quarter {
+    return 'GameID' in object;
 }
 
 function formatOpponentStat(arr: TeamStatSeason[]){
@@ -32,28 +32,11 @@ function formatOpponentStat(arr: TeamStatSeason[]){
                 delete arr[stat]['OpponentStat'][key];
             }
         }
+        const tmp = JSON.stringify(arr[stat]['OpponentStat']);
+        arr[stat]['OpponentStats'] = tmp;
+        delete arr[stat]['OpponentStat'];
     }
 }
-
-function formatQuarters(arr: BoxScore[]){
-    const o: Quarter = {
-        Number: 0,
-        GameID: 0,
-        AwayScore: 0,
-        HomeScore: 0
-    };
-    const keys = Object.keys(o);
-    for (const stat in arr){
-        for (const quarter in arr[stat]['Quarters']){
-            for (const key in arr[stat]['Quarters'][quarter]){
-                if(keys.indexOf(key) < 0){
-                    delete  arr[stat]['Quarters'][quarter][key];
-                }
-            }
-        }
-    }
-}
-
 
 function createObject<T>(o: T, j:JSON): T[] {
     const keys = Object.keys(o);
@@ -62,9 +45,28 @@ function createObject<T>(o: T, j:JSON): T[] {
     for (const item in j){
         if (j.hasOwnProperty(item)){
             var res_temp = {} as T;
-            for (const key in j[item]){
-                if(keys.indexOf(key) > -1){
-                    res_temp[key] = j[item][key];
+
+            /** Handle quarters differently, they are returned as an array */
+            if (isQuarter(o)){
+                for (const q_key in j[item]['Quarters']){
+                    for (const key in j[item]['Quarters'][q_key]){
+                        if (keys.indexOf(key) > -1){
+                            res_temp[key] = j[item]['Quarters'][q_key][key];
+                        }
+                    }
+
+                }
+            }
+            else {
+                for (const key in j[item]){
+                    if(keys.indexOf(key) > -1){
+                        if (typeof j[item][key] === 'string'){
+                            res_temp[key] = j[item][key].replace(/'/g,'');
+                        }
+                        else {
+                            res_temp[key] = j[item][key];
+                        }
+                    }
                 }
             }
 
@@ -123,9 +125,6 @@ export async function getArray<T>(o:T, endpoint: string):Promise<T[]>{
             }
             else if (isTeamSeasonStats(o)){
                 formatOpponentStat(t_arr as TeamStatSeason[]);
-            }
-            else if (isBoxScore(o)){
-                formatQuarters(t_arr as BoxScore[]);
             }
             resolve(t_arr);
         })
