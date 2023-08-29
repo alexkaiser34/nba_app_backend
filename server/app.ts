@@ -1,10 +1,7 @@
-// const express = require("express");
 import express, { Express, Request, Response } from 'express';
 const nbaPlayersRouter = require("./routes/nbaPlayers");
 
-
 const PORT = process.env.PORT || '3000';
-
 
 const app:Express = express();
 
@@ -33,6 +30,3 @@ app.use((err, req:Request, res:Response, next) => {
 app.listen(PORT, () => {
     console.log(`server listening on ${PORT}`);
 });
-
-
-// module.exports = app;
