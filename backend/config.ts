@@ -7,13 +7,11 @@ export const config = {
 };
 
 export const db_config = {
-    db: {
-        host: "localhost",
-        user: "nba_user",
-        password: "nba_2023",
-        database: "nba_data"
-    },
-    listPerPage: 10,
+    host: "awseb-e-hfskuuf3xp-stack-awsebrdsdatabase-58d8rikxnvkg.c6cco9wuqldu.us-east-1.rds.amazonaws.com",
+    user: "nbaUser",
+    password: "nba_2023",
+    database: "ebdb",
+    port: 3306
 };
 
 export const endpoints = (data?: string) => {
