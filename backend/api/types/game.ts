@@ -14,9 +14,9 @@ export interface Game{
 };
 
 export interface Quarter{
+    QuarterID: number,
     Number: number,
     GameID: number,
-    QuarterID: number,
     AwayScore: number,
     HomeScore: number
 }
@@ -37,9 +37,9 @@ export const templateGame: Game = {
 };
 
 export const templateQuarter: Quarter = {
+    QuarterID: 0,
     GameID: 0,
     Number: 0,
     AwayScore: 0,
-    QuarterID: 0,
     HomeScore: 0
 }

@@ -1,6 +1,6 @@
 export interface Standings{
-    Season: number,
     TeamID: number,
+    Season: number,
     Wins: number | null,
     Losses: number | null,
     Percentage: number | null,
