@@ -5,7 +5,7 @@ import { formatInsertValues, getUpdateString } from "../db_helper";
 interface IDatabaseActions {
     save<T>(obj: T | T[], tableName: string): Promise<number>;
     update<T>(obj: T, basedOnfield: string, tableName: string) : Promise<number>;
-    retrieveAll<T,>(tableName: string): Promise<T | T[] | undefined>;
+    retrieveAll<T,>(tableName: string): Promise<T[]>;
     retrieveAllByCondition<T,>(tableName: string, condition: string): Promise<T | T[] | undefined>;
     retrieveById<T,>(id: number, idField: string, tableName: string): Promise<T | undefined>;
     delete(id: number, idField: string, tableName:string): Promise<number>;
@@ -47,10 +47,10 @@ class DatabaseActions implements IDatabaseActions {
 
 
 
-    retrieveAll<T,>(tableName: string): Promise<T | T[] | undefined> {
-        return new Promise<T | T[] | undefined>((resolve, reject) => {
+    retrieveAll<T,>(tableName: string): Promise<T[]> {
+        return new Promise<T[]>((resolve, reject) => {
             const sql = `SELECT * FROM ${tableName}`;
-            makeQuery<T | T[] | undefined>(sql)
+            makeQuery<T[]>(sql)
             .then((res) => {
                 resolve(res);
             })
