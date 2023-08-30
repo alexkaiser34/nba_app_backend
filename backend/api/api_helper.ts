@@ -21,7 +21,7 @@ function isTeamSeasonStats(object: any): object is TeamStatSeason {
 }
 
 function isQuarter(object: any): object is Quarter {
-    return 'GameID' in object;
+    return 'QuarterID' in object;
 }
 
 function formatOpponentStat(arr: TeamStatSeason[]){
