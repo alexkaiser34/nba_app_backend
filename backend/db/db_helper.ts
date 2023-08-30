@@ -1,3 +1,5 @@
+import DataBaseActions from "./classes/DataBaseActions";
+import _ from "lodash";
 interface updateFormat{
     sql: string,
     values: any[]
@@ -91,3 +93,40 @@ export function formatInsertValues<T>(o:T, table:string): string{
     return `INSERT INTO ${table} ${fields} VALUES ${values}`;
 
 }
+
+function getDatabaseDifference<T>(api:T[], db:T[] | Awaited<T>):T | T[]{
+  return api.filter(a_o => {
+    return IsNotInDatabase(a_o, db);
+  });
+}
+
+function IsNotInDatabase<T>(api:T, db:any): boolean {
+    return !db.some(db_o => {
+      return _.isEqual(api, db_o);
+    });
+}
+
+export async function getUniqueEntries<T>(api: T, tableName: string) : Promise<T>{
+
+    return new Promise<T>((resolve, reject) => {
+        DataBaseActions.retrieveAll<T>(tableName)
+        .then((db) =>{
+            const isApiArr = Array.isArray(api);
+            if (isApiArr){
+                resolve(getDatabaseDifference(api,db));
+            }
+            else {
+                if (IsNotInDatabase(api, db)){
+                    resolve(api);
+                }
+                else {
+                    resolve([] as T);
+                }
+            }
+        })
+        .catch((err) => {
+            reject(err);
+        });
+    });
+
+};
