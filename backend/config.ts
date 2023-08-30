@@ -2,7 +2,7 @@ export const config = {
     method: 'GET',
     url: 'https://api.sportsdata.io/v3/nba',
     headers: {
-        'Ocp-Apim-Subscription-Key': 'b6a392907426420f9fbb33c5bd171ebb'
+        'Ocp-Apim-Subscription-Key': 'c55ad9b60c6d4cef95a36e844d18afbb'
     }
 };
 
