@@ -46,8 +46,7 @@ interface PlayerStat extends Stat{
 }
 
 export interface TeamStatSeason extends TeamStat{
-    OpponentStat?: TeamStat,
-    OpponentStats: string
+    OpponentStat?: TeamStat
 }
 
 export interface TeamStatGame extends TeamStat{
@@ -127,8 +126,7 @@ export const templateTeamSeasonStats:TeamStatSeason = {
     ...templateTeamStat,
     OpponentStat: {
         ...templateTeamStat
-    },
-    OpponentStats: ''
+    }
 };
 
 export const templateTeamGameStats:TeamStatGame = {

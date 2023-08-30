@@ -32,9 +32,6 @@ function formatOpponentStat(arr: TeamStatSeason[]){
                 delete arr[stat]['OpponentStat'][key];
             }
         }
-        const tmp = JSON.stringify(arr[stat]['OpponentStat']);
-        arr[stat]['OpponentStats'] = tmp;
-        delete arr[stat]['OpponentStat'];
     }
 }
 
