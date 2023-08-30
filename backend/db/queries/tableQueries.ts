@@ -1,3 +1,9 @@
+export type tableNames = 'players' | 'teams' | 'standings' | 'games'
+    | 'quarters' | 'playersSeasonStats' | 'playersGameStats' | 'users' |
+    'playersSeasonProjectionStats' | 'playersGameProjectionStats'
+    | 'teamGameStats' | 'teamSeasonStats';
+
+
 export const createPlayerTable: string =
     `CREATE TABLE IF NOT EXISTS players(
     PlayerID int, Status varchar(255), TeamID int,
@@ -40,83 +46,83 @@ export const createQuartersTable: string =
 
 export const createPlayersSeasonStatsTable: string =
     `CREATE TABLE IF NOT EXISTS playersSeasonStats(
-    StatID int, TeamID int, Season int, Updated varchar(255), FantasyPoints int,
-    FieldGoalsMade int, FieldGoalsAttempted int, FieldGoalsPercentage float, TwoPointersMade int,
-    TwoPointersAttempted int, TwoPointersPercentage float, ThreePointersMade int, ThreePointersAttempted int,
-    ThreePointersPercentage float, FreeThrowsMade int, FreeThrowsAttempted int, FreeThrowsPercentage float,
-    OffensiveRebounds int, DefensiveRebounds int, Rebounds int, Assists int, Steals int, BlockedShots int,
-    Turnovers int, PersonalFouls int, Points int, TrueShootingAttempts int, TrueShootingPercentage float,
-    FantasyPointsFanduel float, FantasyPointsDraftKings float, FantasyPointsYahoo float, PlusMinus int, PlayerID int,
-    Minutes int, Started int,
+    StatID int, TeamID int, Season int, Updated varchar(255), FantasyPoints float,
+    FieldGoalsMade float, FieldGoalsAttempted float, FieldGoalsPercentage float, TwoPointersMade float,
+    TwoPointersAttempted float, TwoPointersPercentage float, ThreePointersMade float, ThreePointersAttempted float,
+    ThreePointersPercentage float, FreeThrowsMade float, FreeThrowsAttempted float, FreeThrowsPercentage float,
+    OffensiveRebounds float, DefensiveRebounds float, Rebounds float, Assists float, Steals float, BlockedShots float,
+    Turnovers float, PersonalFouls float, Points float, TrueShootingAttempts float, TrueShootingPercentage float,
+    FantasyPointsFanDuel float, FantasyPointsDraftKings float, FantasyPointsYahoo float, PlusMinus float,
+    PlayerID int, Minutes float, Started int,
     UNIQUE(StatID))`;
 
 export const createPlayersGameStatsTable: string =
     `CREATE TABLE IF NOT EXISTS playersGameStats(
-    StatID int, TeamID int, Season int, Updated varchar(255), FantasyPoints int,
-    FieldGoalsMade int, FieldGoalsAttempted int, FieldGoalsPercentage float, TwoPointersMade int,
-    TwoPointersAttempted int, TwoPointersPercentage float, ThreePointersMade int, ThreePointersAttempted int,
-    ThreePointersPercentage float, FreeThrowsMade int, FreeThrowsAttempted int, FreeThrowsPercentage float,
-    OffensiveRebounds int, DefensiveRebounds int, Rebounds int, Assists int, Steals int, BlockedShots int,
-    Turnovers int, PersonalFouls int, Points int, TrueShootingAttempts int, TrueShootingPercentage float,
-    FantasyPointsFanduel float, FantasyPointsDraftKings float, FantasyPointsYahoo float, PlusMinus int, PlayerID int,
-    Minutes int, Started int, GameID int, OpponentID int, FanDuelSalary float, DraftKingsSalary float, YahooSalary float,
-    OpponentRank int, OpponentPositionRank int, IsGameOver boolean, DateTime varchar(255),
+    StatID int, TeamID int, Season int, Updated varchar(255), FantasyPoints float,
+    FieldGoalsMade float, FieldGoalsAttempted float, FieldGoalsPercentage float, TwoPointersMade float,
+    TwoPointersAttempted float, TwoPointersPercentage float, ThreePointersMade float, ThreePointersAttempted float,
+    ThreePointersPercentage float, FreeThrowsMade float, FreeThrowsAttempted float, FreeThrowsPercentage float,
+    OffensiveRebounds float, DefensiveRebounds float, Rebounds float, Assists float, Steals float, BlockedShots float,
+    Turnovers float, PersonalFouls float, Points float, TrueShootingAttempts float, TrueShootingPercentage float,
+    FantasyPointsFanDuel float, FantasyPointsDraftKings float, FantasyPointsYahoo float, PlusMinus float,
+    PlayerID int, Minutes float, Started int, GameID int, OpponentID int, FanDuelSalary float, DraftKingsSalary float,
+    YahooSalary float, OpponentRank int, OpponentPositionRank int, IsGameOver boolean, DateTime varchar(255),
     UNIQUE(StatID))`;
 
 export const createTeamSeasonStatsTable: string =
     `CREATE TABLE IF NOT EXISTS teamSeasonStats(
-    StatID int, TeamID int, Season int, Updated varchar(255), FantasyPoints int,
-    FieldGoalsMade int, FieldGoalsAttempted int, FieldGoalsPercentage float, TwoPointersMade int,
-    TwoPointersAttempted int, TwoPointersPercentage float, ThreePointersMade int, ThreePointersAttempted int,
-    ThreePointersPercentage float, FreeThrowsMade int, FreeThrowsAttempted int, FreeThrowsPercentage float,
-    OffensiveRebounds int, DefensiveRebounds int, Rebounds int, Assists int, Steals int, BlockedShots int,
-    Turnovers int, PersonalFouls int, Points int, TrueShootingAttempts int, TrueShootingPercentage float,
-    FantasyPointsFanduel float, FantasyPointsDraftKings float, FantasyPointsYahoo float, PlusMinus int,
-    Games int, Wins int, Losses int,
-    OpponentStats JSON,
+    StatID int, TeamID int, Season int, Updated varchar(255), FantasyPoints float,
+    FieldGoalsMade float, FieldGoalsAttempted float, FieldGoalsPercentage float, TwoPointersMade float,
+    TwoPointersAttempted float, TwoPointersPercentage float, ThreePointersMade float, ThreePointersAttempted float,
+    ThreePointersPercentage float, FreeThrowsMade float, FreeThrowsAttempted float, FreeThrowsPercentage float,
+    OffensiveRebounds float, DefensiveRebounds float, Rebounds float, Assists float, Steals float, BlockedShots float,
+    Turnovers float, PersonalFouls float, Points float, TrueShootingAttempts float, TrueShootingPercentage float,
+    FantasyPointsFanDuel float, FantasyPointsDraftKings float, FantasyPointsYahoo float, PlusMinus float,
+    Games int, Wins int, Losses int, OpponentStat JSON,
     UNIQUE(StatID))`;
 
 export const createTeamGameStatsTable: string =
     `CREATE TABLE IF NOT EXISTS teamGameStats(
-    StatID int, TeamID int, Season int, Updated varchar(255), FantasyPoints int,
-    FieldGoalsMade int, FieldGoalsAttempted int, FieldGoalsPercentage float, TwoPointersMade int,
-    TwoPointersAttempted int, TwoPointersPercentage float, ThreePointersMade int, ThreePointersAttempted int,
-    ThreePointersPercentage float, FreeThrowsMade int, FreeThrowsAttempted int, FreeThrowsPercentage float,
-    OffensiveRebounds int, DefensiveRebounds int, Rebounds int, Assists int, Steals int, BlockedShots int,
-    Turnovers int, PersonalFouls int, Points int, TrueShootingAttempts int, TrueShootingPercentage float,
-    FantasyPointsFanduel float, FantasyPointsDraftKings float, FantasyPointsYahoo float, PlusMinus int,
-    DateTime varchar(255), HomeOrAway varchar(255), IsGameOver boolean, GameID int, OpponentID int,
+    StatID int, TeamID int, Season int, Updated varchar(255), FantasyPoints float,
+    FieldGoalsMade float, FieldGoalsAttempted float, FieldGoalsPercentage float, TwoPointersMade float,
+    TwoPointersAttempted float, TwoPointersPercentage float, ThreePointersMade float, ThreePointersAttempted float,
+    ThreePointersPercentage float, FreeThrowsMade float, FreeThrowsAttempted float, FreeThrowsPercentage float,
+    OffensiveRebounds float, DefensiveRebounds float, Rebounds float, Assists float, Steals float, BlockedShots float,
+    Turnovers float, PersonalFouls float, Points float, TrueShootingAttempts float, TrueShootingPercentage float,
+    FantasyPointsFanDuel float, FantasyPointsDraftKings float, FantasyPointsYahoo float, PlusMinus float,
     Games int, Wins int, Losses int,
+    DateTime varchar(255), HomeOrAway varchar(255), IsGameOver boolean, GameID int, OpponentID int,
     UNIQUE(StatID))`;
 
 export const createPlayersGameProjectionsTable: string =
     `CREATE TABLE IF NOT EXISTS playersGameProjectionStats(
-    StatID int, TeamID int, Season int, Updated varchar(255), FantasyPoints int,
-    FieldGoalsMade int, FieldGoalsAttempted int, FieldGoalsPercentage float, TwoPointersMade int,
-    TwoPointersAttempted int, TwoPointersPercentage float, ThreePointersMade int, ThreePointersAttempted int,
-    ThreePointersPercentage float, FreeThrowsMade int, FreeThrowsAttempted int, FreeThrowsPercentage float,
-    OffensiveRebounds int, DefensiveRebounds int, Rebounds int, Assists int, Steals int, BlockedShots int,
-    Turnovers int, PersonalFouls int, Points int, TrueShootingAttempts int, TrueShootingPercentage float,
-    FantasyPointsFanduel float, FantasyPointsDraftKings float, FantasyPointsYahoo float, PlusMinus int, PlayerID int,
-    Minutes int, Started int, GameID int, OpponentID int, FanDuelSalary float, DraftKingsSalary float, YahooSalary float,
+    StatID int, TeamID int, Season int, Updated varchar(255), FantasyPoints float,
+    FieldGoalsMade float, FieldGoalsAttempted float, FieldGoalsPercentage float, TwoPointersMade float,
+    TwoPointersAttempted float, TwoPointersPercentage float, ThreePointersMade float, ThreePointersAttempted float,
+    ThreePointersPercentage float, FreeThrowsMade float, FreeThrowsAttempted float, FreeThrowsPercentage float,
+    OffensiveRebounds float, DefensiveRebounds float, Rebounds float, Assists float, Steals float, BlockedShots float,
+    Turnovers float, PersonalFouls float, Points float, TrueShootingAttempts float, TrueShootingPercentage float,
+    FantasyPointsFanDuel float, FantasyPointsDraftKings float, FantasyPointsYahoo float, PlusMinus float,
+    PlayerID int, Minutes float, Started int, GameID int, OpponentID int,
+    FanDuelSalary float, DraftKingsSalary float, YahooSalary float,
     OpponentRank int, OpponentPositionRank int, IsGameOver boolean, DateTime varchar(255),
     UNIQUE(StatID))`;
 
 
 export const createPlayersSeasonProjectionsTable: string =
     `CREATE TABLE IF NOT EXISTS playersSeasonProjectionStats(
-    StatID int, TeamID int, Season int, Updated varchar(255), FantasyPoints int,
-    FieldGoalsMade int, FieldGoalsAttempted int, FieldGoalsPercentage float, TwoPointersMade int,
-    TwoPointersAttempted int, TwoPointersPercentage float, ThreePointersMade int, ThreePointersAttempted int,
-    ThreePointersPercentage float, FreeThrowsMade int, FreeThrowsAttempted int, FreeThrowsPercentage float,
-    OffensiveRebounds int, DefensiveRebounds int, Rebounds int, Assists int, Steals int, BlockedShots int,
-    Turnovers int, PersonalFouls int, Points int, TrueShootingAttempts int, TrueShootingPercentage float,
-    FantasyPointsFanduel float, FantasyPointsDraftKings float, FantasyPointsYahoo float, PlusMinus int, PlayerID int,
-    Minutes int, Started int,
+    StatID int, TeamID int, Season int, Updated varchar(255), FantasyPoints float,
+    FieldGoalsMade float, FieldGoalsAttempted float, FieldGoalsPercentage float, TwoPointersMade float,
+    TwoPointersAttempted float, TwoPointersPercentage float, ThreePointersMade float, ThreePointersAttempted float,
+    ThreePointersPercentage float, FreeThrowsMade float, FreeThrowsAttempted float, FreeThrowsPercentage float,
+    OffensiveRebounds float, DefensiveRebounds float, Rebounds float, Assists float, Steals float, BlockedShots float,
+    Turnovers float, PersonalFouls float, Points float, TrueShootingAttempts float, TrueShootingPercentage float,
+    FantasyPointsFanDuel float, FantasyPointsDraftKings float, FantasyPointsYahoo float, PlusMinus float,
+    PlayerID int, Minutes float, Started int,
     UNIQUE(StatID))`;
 
 export const createUserTable: string =
     `CREATE TABLE IF NOT EXISTS users(
-        userID int NOT NULL AUTO_INCREMENT, userName varchar(255),
-        password varchar(255), firstName varchar(255),
-        lastName varchar(255), PRIMARY KEY(userID))`;
+    userID int NOT NULL AUTO_INCREMENT, userName varchar(255),
+    password varchar(255), firstName varchar(255),
+    lastName varchar(255), PRIMARY KEY(userID))`;

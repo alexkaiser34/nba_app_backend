@@ -1,18 +1,32 @@
 import DataBaseActions from "./classes/DataBaseActions";
 import _ from "lodash";
+import { tableNames } from "./queries/tableQueries";
+
 interface updateFormat{
     sql: string,
     values: any[]
 }
+interface insertValues{
+    fields: string[],
+    values: string
+}
+function getType(p:any): string {
+    return typeof p;
+}
 
-export function getUpdateString<T>(o:T, condition:string, table: string):updateFormat {
+export function getUpdateString<T>(o:T, condition:string, table: tableNames):updateFormat {
     const fields = Object.keys(o).filter(k => k !== condition).toString().replace(/,/g, ' = ?,');
     const sql: string =
     `UPDATE ${table} SET ${fields} = ? WHERE ${condition} = ${o[condition]}`;
     var values: any[] = [];
     Object.entries(o).forEach(([k,v]) => {
         if (k !== condition){
-            values.push(v);
+            if (getType(v) === "object"){
+                values.push(JSON.stringify(v));
+            }
+            else {
+                values.push(v);
+            }
         }
     });
 
@@ -22,18 +36,88 @@ export function getUpdateString<T>(o:T, condition:string, table: string):updateF
     };
 }
 
-export function formatInsertValues<T>(o:T, table:string): string{
+export function getMonthStr(month: number):string{
+    var s:string = '';
+    switch(month){
+        case 1:
+            s = 'JAN';
+            break;
+        case 2:
+            s = 'FEB';
+            break;
+        case 3:
+            s = 'MAR';
+            break;
+        case 4:
+            s = 'APR';
+            break;
+        case 5:
+            s = 'MAY';
+            break;
+        case 6:
+            s = 'JUN';
+            break;
+        case 7:
+            s = 'JUL';
+            break;
+        case 8:
+            s = 'AUG';
+            break;
+        case 9:
+            s = 'SEP';
+            break;
+        case 10:
+            s = 'OCT';
+            break;
+        case 11:
+            s = 'NOV';
+            break;
+        case 12:
+            s = 'DEC';
+            break;
+        default:
+            break;
+    }
+    return s;
+}
+
+function grabValues<T>(o:T, s: string[][]){
+    const obj_key = Object.keys(o);
+    let tmp:string[] = [];
+    obj_key.forEach((key) => {
+        if (o[key] !== null){
+            if (getType(o[key]) === "object"){
+                tmp.push(`'${JSON.stringify(o[key])}'`);
+            }
+            else if (getType(o[key]) === "string") {
+                tmp.push(`'${o[key]}'`);
+            }
+            else {
+                tmp.push(o[key]);
+            }
+        }
+        else {
+            tmp.push('null');
+        }
+    });
+    s.push(tmp);
+}
+
+export function formatInsertValues<T>(o:T): insertValues {
+
+    const isArr = Array.isArray(o);
+
     if (o === null){
-        return 'error';
+        return {fields: null, values: null};
     }
 
-    const isObjArr = Array.isArray(o);
-    if (isObjArr){
-        if (o.length == 0){
-            return 'error';
+    if (isArr){
+        if (o.length <= 0){
+            return {fields: null, values: null};
         }
     }
-    const keys = isObjArr ? Object.keys(o[0]) : Object.keys(o);
+
+    const keys = isArr ? Object.keys(o[0]) : Object.keys(o);
 
     /** dumb hack to get past Key special keyword */
     for (const s in keys){
@@ -41,56 +125,29 @@ export function formatInsertValues<T>(o:T, table:string): string{
             keys[s] = `\`Key\``;
         }
     }
-    const fields = '(' + keys.toString() + ')';
 
-    var values:string =  isObjArr ? '' : '(';
-    for(const obj in o){
-        if (isObjArr){
-            values += '(';
-            for (const key in o[obj]){
-                const t:string = typeof o[obj][key];
-                if (key === keys[keys.length-1]){
-                    if (t.includes('string')){
-                        values += `'${o[obj][key]}'`;
-                    }
-                    else {
-                        values += `${o[obj][key]}`;
-                    }
-                }
-                else {
-                    if (t.includes('string')){
-                        values += `'${o[obj][key]}',`;
-                    }
-                    else {
-                        values += `${o[obj][key]},`;
-                    }
-                }
-            }
-            values += '),';
-        }
-        else {
-            const t:string = typeof o[obj];
-            if (obj === keys[keys.length-1]){
-                if (t.includes('string')){
-                    values += `'${o[obj]}'`;
-                }
-                else {
-                    values += `${o[obj]}`;
-                }
-            }
-            else {
-                if (t.includes('string')){
-                    values += `'${o[obj]}',`;
-                }
-                else {
-                    values += `${o[obj]},`;
-                }
-            }
-        }
+    let values:string[][] = [];
+    let res:string = '';
+
+    if (isArr){
+        o.forEach((obj) => {
+            grabValues(obj, values);
+        });
     }
-    values = isObjArr ? values.substring(0,values.length-1) : values + ')';
+    else {
+        grabValues(o, values);
+    }
 
-    return `INSERT INTO ${table} ${fields} VALUES ${values}`;
+    values.forEach((val) => {
+        res += `(${val}),`;
+    });
+
+    res = res.substring(0,res.length-1);
+
+    return {
+        fields: keys,
+        values: res
+    };
 
 }
 
@@ -106,7 +163,7 @@ function IsNotInDatabase<T>(api:T, db:any): boolean {
     });
 }
 
-export async function getUniqueEntries<T>(api: T, tableName: string) : Promise<T>{
+export async function getUniqueEntries<T>(api: T, tableName: tableNames) : Promise<T>{
 
     return new Promise<T>((resolve, reject) => {
         DataBaseActions.retrieveAll<T>(tableName)

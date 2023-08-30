@@ -1,14 +1,42 @@
-import { conforms } from "lodash";
-import { getBoxScores, getPlayerProjectionsByDate, getPlayerProjectionsSeason, getPlayers, getPlayerStatsByDate, getPlayerStatsSeason, getSchedule, getStandings, getTeams, getTeamSeasonStats, getTeamStatsByDate } from "../api/api_endpoints";
+import {
+    getBoxScores,
+    getPlayerProjectionsByDate,
+    getPlayerProjectionsSeason,
+    getPlayers,
+    getPlayerStatsByDate,
+    getPlayerStatsSeason,
+    getSchedule,
+    getStandings,
+    getTeams,
+    getTeamSeasonStats,
+    getTeamStatsByDate
+} from "../api/api_endpoints";
+
+import {
+    createGamesTable,
+    createPlayersGameProjectionsTable,
+    createPlayersGameStatsTable,
+    createPlayersSeasonProjectionsTable,
+    createPlayersSeasonStatsTable,
+    createPlayerTable,
+    createQuartersTable,
+    createStandingsTable,
+    createTeamGameStatsTable,
+    createTeamSeasonStatsTable,
+    createTeamTable,
+    createUserTable,
+    tableNames
+ } from "./queries/tableQueries";
+
 import DataBaseActions from "./classes/DataBaseActions";
-import { getUniqueEntries } from "./db_helper";
+import { getMonthStr, getUniqueEntries } from "./db_helper";
 
 
 /**
  * We know the first element in each object is the ID...
  * For now, dont return any promise data as its not entirely useful
  */
-export async function updateData<T,>(api_data: T, tableName: string){
+export async function updateData<T,>(api_data: T, tableName: tableNames){
     const unique = await getUniqueEntries(api_data, tableName);
 
     const dbEntries = await DataBaseActions.retrieveAll<T>(tableName);
@@ -18,7 +46,6 @@ export async function updateData<T,>(api_data: T, tableName: string){
     });
 
     for (const item in unique){
-
         let needsUpdate = false;
         if (id_arr.includes(unique[item][Object.keys(unique[item])[0]])){
             needsUpdate = true;
@@ -37,52 +64,8 @@ export async function updateData<T,>(api_data: T, tableName: string){
     }
 }
 
-function getMonthStr(month: number):string{
-    var s:string = '';
-    switch(month){
-        case 1:
-            s = 'JAN';
-            break;
-        case 2:
-            s = 'FEB';
-            break;
-        case 3:
-            s = 'MAR';
-            break;
-        case 4:
-            s = 'APR';
-            break;
-        case 5:
-            s = 'MAY';
-            break;
-        case 6:
-            s = 'JUN';
-            break;
-        case 7:
-            s = 'JUL';
-            break;
-        case 8:
-            s = 'AUG';
-            break;
-        case 9:
-            s = 'SEP';
-            break;
-        case 10:
-            s = 'OCT';
-            break;
-        case 11:
-            s = 'NOV';
-            break;
-        case 12:
-            s = 'DEC';
-            break;
-        default:
-            break;
-    }
-    return s;
-}
 
-async function apiToDB(tableName:string,fnc: any, params?:string){
+async function apiToDB(tableName:tableNames,fnc: any, params?:string){
     const result = await fnc(params);
     console.log('updating....' + tableName);
     await updateData(result, tableName);
@@ -127,5 +110,35 @@ export async function dailyUpdate(){
 
     /** Player season projections */
     await apiToDB('playersSeasonProjectionStats', getPlayerProjectionsSeason, year);
+}
 
+
+export async function createTables(){
+    await DataBaseActions.createTable(createPlayerTable);
+    await DataBaseActions.createTable(createTeamTable);
+    await DataBaseActions.createTable(createStandingsTable);
+    await DataBaseActions.createTable(createGamesTable);
+    await DataBaseActions.createTable(createQuartersTable);
+    await DataBaseActions.createTable(createPlayersSeasonStatsTable);
+    await DataBaseActions.createTable(createPlayersGameStatsTable);
+    await DataBaseActions.createTable(createTeamSeasonStatsTable);
+    await DataBaseActions.createTable(createTeamGameStatsTable);
+    await DataBaseActions.createTable(createPlayersGameProjectionsTable);
+    await DataBaseActions.createTable(createPlayersSeasonProjectionsTable);
+    await DataBaseActions.createTable(createUserTable);
+}
+
+export async function deleteTables(){
+    await DataBaseActions.dropTable('players');
+    await DataBaseActions.dropTable('teams');
+    await DataBaseActions.dropTable('standings');
+    await DataBaseActions.dropTable('playersGameProjectionStats');
+    await DataBaseActions.dropTable('quarters');
+    await DataBaseActions.dropTable('playersGameStats');
+    await DataBaseActions.dropTable('playersSeasonProjectionStats');
+    await DataBaseActions.dropTable('playersSeasonStats');
+    await DataBaseActions.dropTable('teamGameStats');
+    await DataBaseActions.dropTable('teamSeasonStats');
+    await DataBaseActions.dropTable('games');
+    await DataBaseActions.dropTable('users');
 }
