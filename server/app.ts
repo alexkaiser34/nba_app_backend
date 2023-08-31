@@ -1,6 +1,5 @@
 import express, { Express, Request, Response } from 'express';
-const nbaPlayersRouter = require("./routes/nbaPlayers");
-
+import { playerRouter } from './routes/players';
 const PORT = process.env.PORT || '3000';
 
 const app:Express = express();
@@ -17,7 +16,7 @@ app.get("/", (req:Request, res:Response) => {
     res.json({ message: "alex is cool cat"});
 });
 
-app.use("/nbaPlayers", nbaPlayersRouter);
+app.use("/nbaPlayers", playerRouter);
 
 /* Error handler middleware */
 app.use((err, req:Request, res:Response, next) => {
