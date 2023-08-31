@@ -6,14 +6,22 @@ import { tableNames } from "../queries/tableQueries";
 interface IDatabaseActions {
     save<T>(obj: T | T[], tableName: tableNames): Promise<number>;
     update<T>(obj: T, basedOnfield: string, tableName: tableNames) : Promise<number>;
-    retrieveAll<T,>(tableName: tableNames): Promise<T[]>;
-    retrieveAllByCondition<T,>(tableName: string, condition: string): Promise<T | T[] | undefined>;
-    retrieveById<T,>(id: number, idField: string, tableName: tableNames): Promise<T | undefined>;
+    retrieveAll<T,>(tableName: tableNames, fieldNames?: string): Promise<T[]>;
+    retrieveAllByCondition<T,>(tableName: string, fieldList: string, condition: string): Promise<T | T[] | undefined>;
+    retrieveAllByJoin<T,>(
+        mainTable: tableNames,
+        fieldList: string,
+        secondaryTable: tableNames,
+        joinType: joinOps,
+        joinCondition: string,
+        condition: string): Promise<T | T[] | undefined>;
     delete(id: number, idField: string, tableName: tableNames): Promise<number>;
     deleteAll(tableName: tableNames): Promise<number>;
     createTable(tableParams: string): Promise<number>;
     dropTable(tableName: tableNames): Promise<number>;
 };
+
+export type joinOps = "INNER" | "LEFT" | "RIGHT" | "CROSS";
 
 class DatabaseActions implements IDatabaseActions {
     save<T>(obj: T | T[], tableName: tableNames): Promise<number> {
@@ -49,11 +57,10 @@ class DatabaseActions implements IDatabaseActions {
 
     }
 
-
-
-    retrieveAll<T,>(tableName: tableNames): Promise<T[]> {
+    retrieveAll<T,>(tableName: tableNames, fieldNames?: string): Promise<T[]> {
+        const fields = fieldNames === undefined ? '*' : fieldNames;
         return new Promise<T[]>((resolve, reject) => {
-            const sql = `SELECT * FROM ${tableName}`;
+            const sql = `SELECT ${fields} FROM ${tableName}`;
             makeQuery<T[]>(sql)
             .then((res) => {
                 resolve(res);
@@ -64,9 +71,9 @@ class DatabaseActions implements IDatabaseActions {
         });
     }
 
-    retrieveAllByCondition<T,>(tableName: tableNames, condition: string): Promise<T | T[] | undefined> {
+    retrieveAllByCondition<T,>(tableName: tableNames, fieldList: string, condition: string): Promise<T | T[] | undefined> {
         return new Promise<T | T[] | undefined>((resolve, reject) => {
-            const sql = `SELECT * FROM ${tableName} WHERE ${condition}`;
+            const sql = `SELECT ${fieldList} FROM ${tableName} WHERE ${condition}`;
             makeQuery<T | T[] | undefined>(sql)
             .then((res) => {
                 resolve(res);
@@ -75,13 +82,21 @@ class DatabaseActions implements IDatabaseActions {
                 reject(err);
             });
         });
-
     }
 
-    retrieveById<T,>(id: number, idField: string, tableName: tableNames): Promise<T | undefined> {
-        return new Promise<T | undefined>((resolve, reject) => {
-            const sql = `SELECT * FROM ${tableName} WHERE ${idField} = ${id}`;
-            makeQuery<T | undefined>(sql)
+
+    retrieveAllByJoin<T,>(
+        mainTable: tableNames,
+        fieldList: string,
+        secondaryTable: tableNames,
+        joinType: joinOps,
+        joinCondition: string,
+        condition: string): Promise<T | T[] | undefined> {
+        return new Promise<T | T[] | undefined>((resolve, reject) => {
+            const sql =
+            `SELECT ${fieldList} FROM ${mainTable} ${joinType} join ${secondaryTable}
+             ON ${joinCondition} WHERE ${condition}`;
+            makeQuery<T | T[] | undefined>(sql)
             .then((res) => {
                 resolve(res);
             })
