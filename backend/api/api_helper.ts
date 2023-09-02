@@ -41,33 +41,33 @@ function createObject<T>(o: T, j:JSON): T[] {
 
     for (const item in j){
         if (j.hasOwnProperty(item)){
-            var res_temp = {} as T;
 
             /** Handle quarters differently, they are returned as an array */
             if (isQuarter(o)){
                 for (const q_key in j[item]['Quarters']){
+                    var res_temp = {} as T;
                     for (const key in j[item]['Quarters'][q_key]){
                         if (keys.indexOf(key) > -1){
                             res_temp[key] = j[item]['Quarters'][q_key][key];
                         }
                     }
-
+                    res.push(res_temp);
                 }
             }
             else {
+                var res_loc = {} as T;
                 for (const key in j[item]){
                     if(keys.indexOf(key) > -1){
                         if (typeof j[item][key] === 'string'){
-                            res_temp[key] = j[item][key].replace(/'/g,'');
+                            res_loc[key] = j[item][key].replace(/'/g,'');
                         }
                         else {
-                            res_temp[key] = j[item][key];
+                            res_loc[key] = j[item][key];
                         }
                     }
                 }
+                res.push(res_loc);
             }
-
-            res.push(res_temp);
         }
     }
     return res;
