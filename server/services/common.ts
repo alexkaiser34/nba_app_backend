@@ -1,6 +1,6 @@
 import DataBaseActions from "../../backend/db/classes/DataBaseActions";
 import { tableNames } from "../../backend/db/queries/tableQueries";
-import { requestAll, requestID, requestByString } from "../types/request";
+import { requestAll, requestID, requestByString, requestByCondition } from "../types/request";
 
 
 export async function getAll<T,>(
@@ -44,6 +44,21 @@ export async function getByField<T,>(
                 tableName,
                 data.fields === undefined ? '*' : data.fields,
                 `${field as string}=${data.fieldValue}`
+            )
+            .then((res) => resolve(res as T[]))
+            .catch((err) => reject(err));
+        });
+}
+
+export async function getByMultipleCondition<T,>(
+    tableName: tableNames,
+    data: requestByCondition
+    ): Promise<T[]>{
+        return new Promise<T[]>((resolve, reject) => {
+            DataBaseActions.retrieveAllByCondition<T[]>(
+                tableName,
+                data.fields === undefined ? '*' : data.fields,
+                data.conditions
             )
             .then((res) => resolve(res as T[]))
             .catch((err) => reject(err));
