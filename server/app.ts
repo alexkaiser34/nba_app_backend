@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import { playerRouter } from './routes/players';
+import { standingsRouter } from './routes/standings';
 import { teamRouter } from './routes/teams';
 const PORT = process.env.PORT || '3000';
 
@@ -19,6 +20,7 @@ app.get("/", (req:Request, res:Response) => {
 
 app.use("/players", playerRouter);
 app.use("/teams", teamRouter);
+app.use("/standings", standingsRouter);
 
 /* Error handler middleware */
 app.use((err, req:Request, res:Response, next) => {
