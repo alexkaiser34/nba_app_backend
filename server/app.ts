@@ -3,6 +3,7 @@ import { playerRouter } from './routes/players';
 import { standingsRouter } from './routes/standings';
 import { teamRouter } from './routes/teams';
 import { scoresRouter } from './routes/scores';
+import { statsRouter } from './routes/stats';
 
 const PORT = process.env.PORT || '3000';
 
@@ -24,6 +25,7 @@ app.use("/players", playerRouter);
 app.use("/teams", teamRouter);
 app.use("/standings", standingsRouter);
 app.use("/scores", scoresRouter);
+app.use("/stats", statsRouter);
 
 /* Error handler middleware */
 app.use((err, req:Request, res:Response, next) => {
