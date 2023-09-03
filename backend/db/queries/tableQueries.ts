@@ -33,9 +33,9 @@ export const createStandingsTable: string =
 
 export const createGamesTable: string =
     `CREATE TABLE IF NOT EXISTS games(
-    GameID int, Season int, Status varchar(255), Day varchar(255), DateTime varchar(255),
-    AwayTeamID int, HomeTeamID int, HomeTeamScore int, AwayTeamScore int,
-    UNIQUE(GameID))`;
+    id int, season int, date JSON, status JSON, arena JSON,
+    teams JSON, scores JSON, timesTied int, leadChanges int,
+    UNIQUE(id))`;
 
 export const createQuartersTable: string =
     `CREATE TABLE IF NOT EXISTS quarters(
