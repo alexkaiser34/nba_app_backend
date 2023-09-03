@@ -29,34 +29,6 @@ export const endpoints = (data?: string) => {
         players: '/scores/json/Players',
         teams: '/scores/json/teams',
 
-        // data = season (example: 2023)
-        schedule: `/scores/json/SchedulesBasic/${data}`,
-
-        // data = season (example: 2023)
-        standings: `/scores/json/Standings/${data}`,
-
-        // data = date (example: 2018-OCT-31)
-        teamGameStatsByDate: `/scores/json/TeamGameStatsByDate/${data}`,
-
-        // data = season (example: 2023)
-        teamSeasonStats: `/scores/json/TeamSeasonStats/${data}`,
-
-        // data = date (example: 2018-OCT-31)
-        playerProjectionsByDate: `/projections/json/PlayerGameProjectionStatsByDate/${data}`,
-
-        // data = season (example: 2023)
-        playerSeasonProjections: `/projections/json/PlayerSeasonProjectionStats/${data}`,
-
-        // data = date (example: 2018-OCT-31)
-        boxScoresByDate: `/stats/json/BoxScores/${data}`,
-
-        // data = date (example: 2018-OCT-31)
-        // NOTE: prob dont need, seems like box score has this already
-        playerGameStatsByDate: `/stats/json/PlayerGameStatsByDate/${data}`,
-
-        // data = season (example: 2023)
-        playerSeasonStats: `/stats/json/PlayerSeasonStats/${data}`,
-
         // gamesPerSeason
         // params: { season : '<season>'}
         games_rapid: '/games',
@@ -81,8 +53,9 @@ export const endpoints = (data?: string) => {
         teams_games_statistics_rapid: '/games/statistics',
 
         // stats of players by team
+        // provides game stats too
         // params: {team: '<team number>', season: '<season>'}
-        players_statistics_per_team: '/players/stastics'
+        players_statistics_per_team_rapid: '/players/stastics'
 
 
     };
