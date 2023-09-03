@@ -20,7 +20,7 @@ export const endpoints = (data?: string) => {
         teams: '/scores/json/teams',
 
         // data = season (example: 2023)
-        schedule: `/scores/json/Games/${data}`,
+        schedule: `/scores/json/SchedulesBasic/${data}`,
 
         // data = season (example: 2023)
         standings: `/scores/json/Standings/${data}`,
