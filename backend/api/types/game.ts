@@ -6,12 +6,9 @@ export interface Game{
     DateTime: string | null,
     AwayTeamID: number | null,
     HomeTeamID: number | null,
-    Attendance: number | null,
     HomeTeamScore: number | null,
-    AwayTeamScore: number | null,
-    PointSpread: number | null,
-    OverUnder: number | null
-};
+    AwayTeamScore: number | null
+}
 
 export interface Quarter{
     QuarterID: number,
@@ -29,11 +26,8 @@ export const templateGame: Game = {
     DateTime: '',
     AwayTeamID: 0,
     HomeTeamID: 0,
-    Attendance: 0,
     HomeTeamScore: 0,
-    AwayTeamScore: 0,
-    PointSpread: 0,
-    OverUnder: 0
+    AwayTeamScore: 0
 };
 
 export const templateQuarter: Quarter = {
