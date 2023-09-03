@@ -15,7 +15,7 @@ scoresRouter.get('/getByDay', async function(req, res, next){
         res.json(
             await getByField<Game>(
                 'games',
-                'Day',
+                'date',
                 req.body as requestByString
             )
         );
@@ -30,7 +30,7 @@ scoresRouter.get('/getByGameID', async function(req, res, next){
         res.json(
             await getByID<Game>(
                 'games',
-                'GameID',
+                'id',
                 req.body as requestID
             )
         );
