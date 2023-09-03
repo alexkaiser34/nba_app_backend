@@ -1,15 +1,11 @@
 import {
-    getBoxScores,
-    getPlayerProjectionsByDate,
-    getPlayerProjectionsSeason,
     getPlayers,
-    getPlayerStatsByDate,
-    getPlayerStatsSeason,
     getSchedule,
     getStandings,
     getTeams,
     getTeamSeasonStats,
-    getTeamStatsByDate
+    getTeamGameStats,
+    getPlayerGameStatsByTeam
 } from "../api/api_endpoints";
 
 import {
@@ -91,25 +87,14 @@ export async function dailyUpdate(){
     await apiToDB('standings', getStandings, year);
 
     /** Team game stats */
-    await apiToDB('teamGameStats', getTeamStatsByDate, date_string);
+    await apiToDB('teamGameStats', getTeamGameStats);
 
     /** Team Season stats */
     await apiToDB('teamSeasonStats', getTeamSeasonStats, year);
 
-    /** Quarter stats */
-    await apiToDB('quarters', getBoxScores, date_string);
-
     /** Player game stats */
-    await apiToDB('playersGameStats', getPlayerStatsByDate, date_string);
+    await apiToDB('playersGameStats', getPlayerGameStatsByTeam, year);
 
-    /** Player season stats */
-    await apiToDB('playersSeasonStats', getPlayerStatsSeason, year);
-
-    /** Player game projections */
-    await apiToDB('playersGameProjectionStats', getPlayerProjectionsByDate, date_string);
-
-    /** Player season projections */
-    await apiToDB('playersSeasonProjectionStats', getPlayerProjectionsSeason, year);
 }
 
 
