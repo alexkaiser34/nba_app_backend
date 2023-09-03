@@ -45,13 +45,13 @@ export async function getBoxScore(id: requestID){
     res.teams = await DataBaseActions.retrieveAllByCondition<Team>(
         'teams',
         '*',
-        `TeamID=${res.game.AwayTeamID} OR TeamID=${res.game.HomeTeamID}`
+        `TeamID=${res.game.teams.awayTeamID} OR TeamID=${res.game.teams.homeTeamID}`
     ) as Team[];
 
     res.players = await DataBaseActions.retrieveAllByCondition<Player>(
         'players',
         '*',
-        `TeamID=${res.game.AwayTeamID} OR TeamID=${res.game.HomeTeamID}`
+        `TeamID=${res.game.teams.awayTeamID} OR TeamID=${res.game.teams.homeTeamID}`
     ) as Player[];
 
     res.teamGameStats = await DataBaseActions.retrieveAllByCondition<TeamStatGame>(
