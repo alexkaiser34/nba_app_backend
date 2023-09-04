@@ -66,7 +66,7 @@ export async function getArrayMultipleRequests<T>(
                         isPlayerStatGame(o) && !byDate ? { season: params?.season, team: id_arr[id]} :
                         { id: id_arr[id] };
             const result = await fetch(endpoint, sportsDataApi, ops);
-            preProcessJson(o, result, id_arr[id]);
+            preProcessJson(o, result, id_arr[id], params?.season);
             json_arr.push(result);
         }
 
