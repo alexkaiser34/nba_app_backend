@@ -13,7 +13,7 @@ export async function getSeasonStanding(
 
             if (filterBy !== undefined){
                 if (season.fieldValue !== undefined){
-                    cond += ` AND ${filterBy as string}=${season.fieldValue}`;
+                    cond += ` AND teams.${filterBy as string}='${season.fieldValue}'`;
                 }
                 else {
                     reject({"message": `Must specify "fieldValue":"value" to seek for ${filterBy as string}`});

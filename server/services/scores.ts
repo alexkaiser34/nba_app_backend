@@ -13,7 +13,7 @@ export async function getTeamScores(team: requestID):Promise<teamScore>{
             fields,
             'teams',
             'INNER',
-            "teams.TeamID = games.AwayTeamID OR teams.TeamID = games.HomeTeamID",
+            "teams.TeamID = JSON_EXTRACT(games.teams, '$.awayTeamID') OR teams.TeamID = JSON_EXTRACT(games.teams, '$.homeTeamID')",
             `TeamID=${team.id}`
         )
         .then((res) => resolve(res as teamScore))

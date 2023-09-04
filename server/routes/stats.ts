@@ -11,7 +11,9 @@ statsRouter.get("/", (req, res) => {
     res.json({ message: "stats ok"});
 });
 
-
+/**
+ * { id: GameID, fields?: 'FieldNameList' }
+ */
 statsRouter.get('/getBoxScore', async function(req,res,next){
     try {
         res.json(
@@ -23,6 +25,10 @@ statsRouter.get('/getBoxScore', async function(req,res,next){
     }
 });
 
+/**
+ * { conditions: condition, fields?: 'FieldNameList' }
+ * condition Ex: GameID = GameID and playerId = playerId
+ */
 statsRouter.get('/getPlayerGameStats', async function(req,res,next){
     try {
         res.json(
@@ -37,6 +43,10 @@ statsRouter.get('/getPlayerGameStats', async function(req,res,next){
     }
 });
 
+/**
+ * { conditions: condition, fields?: 'FieldNameList' }
+ * condition Ex: GameID = GameID and teamID = teamID
+ */
 statsRouter.get('/getTeamGameStats', async function(req,res,next){
     try {
         res.json(
@@ -51,7 +61,10 @@ statsRouter.get('/getTeamGameStats', async function(req,res,next){
     }
 });
 
-
+/**
+ * { conditions: condition, fields?: 'FieldNameList' }
+ * condition Ex: teamID = teamID and season=season
+ */
 statsRouter.get('/getTeamSeasonStats', async function(req,res,next){
     try {
         res.json(

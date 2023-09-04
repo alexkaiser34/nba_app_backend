@@ -20,9 +20,7 @@ export interface BoxScore {
     teams: Team[],
     players: Player[],
     teamGameStats: TeamStatGame,
-    quarters: Quarter | Quarter[],
-    playerGameStats: PlayerStatGame,
-    playerProjectionStats: PlayerStatGame
+    playerGameStats: PlayerStatGame
 }
 
 /** For now, make queries from multiple tables so we can separate data
@@ -34,7 +32,7 @@ export async function getBoxScore(id: requestID){
     const tmp = await DataBaseActions.retrieveAllByCondition<Game>(
         'games',
         '*',
-        `GameID=${id.id}`
+        `id=${id.id}`
     );
 
     /** only expect 1 element due to gameID being a unique key */
