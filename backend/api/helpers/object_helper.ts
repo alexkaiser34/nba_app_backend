@@ -82,7 +82,7 @@ async function updateTeam(arr: Team[]) : Promise<Team[]>{
     });
 }
 
-export function createObject<T>(o: T, j:JSON): T[] {
+export function createObject<T>(o: T, j:JSON | JSON[]): T[] {
     const keys = Object.keys(o);
     var res: T[] = [];
 

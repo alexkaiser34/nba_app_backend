@@ -55,7 +55,7 @@ export const endpoints = (data?: string) => {
         // stats of players by team
         // provides game stats too
         // params: {team: '<team number>', season: '<season>'}
-        players_statistics_per_team_rapid: '/players/stastics'
+        players_statistics_per_team_rapid: '/players/statistics'
 
 
     };

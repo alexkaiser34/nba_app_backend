@@ -1,7 +1,6 @@
 import { Game, Quarter } from "../../backend/api/types/game";
 import { Player } from "../../backend/api/types/player";
 import {
-    PlayerSeasonStat,
     PlayerStatGame,
     TeamStatGame,
     TeamStatSeason
@@ -14,7 +13,6 @@ import { requestID } from "../types/request";
 export type allStats =
     TeamStatGame |
     TeamStatSeason |
-    PlayerSeasonStat |
     PlayerStatGame;
 
 export interface BoxScore {
@@ -60,23 +58,12 @@ export async function getBoxScore(id: requestID){
         `GameID=${id.id}`
     ) as TeamStatGame;
 
-    res.quarters = await DataBaseActions.retrieveAllByCondition<Quarter>(
-        'quarters',
-        '*',
-        `GameID=${id.id}`
-    );
-
     res.playerGameStats = await DataBaseActions.retrieveAllByCondition<PlayerStatGame>(
         'playersGameStats',
         '*',
         `GameID=${id.id}`
     ) as PlayerStatGame;
 
-    res.playerProjectionStats = await DataBaseActions.retrieveAllByCondition<PlayerStatGame>(
-        'playersGameProjectionStats',
-        '*',
-        `GameID=${id.id}`
-    ) as PlayerStatGame;
 
     return res;
 }

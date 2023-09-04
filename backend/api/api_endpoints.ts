@@ -1,5 +1,5 @@
 import { Player, templatePlayer } from './types/player';
-import { getArray } from './helpers/api_helper';
+import { getArray, getArrayMultipleRequests } from './helpers/api_helper';
 import { endpoints } from '../config';
 import { Team, templateTeam } from './types/team';
 import { Game, templateGame, templateQuarter } from './types/game';
@@ -7,9 +7,9 @@ import { Standings, templateStandings } from './types/standings';
 import { templateTeamSeasonStats,
          templateTeamGameStats,
          PlayerStatGame,
-         templatePlayerGameStat,
          TeamStatGame,
-         TeamStatSeason
+         TeamStatSeason,
+         templatePlayerGameStat
 } from './types/stats';
 
 /**
@@ -66,7 +66,7 @@ export async function getStandings(year: string): Promise<Standings[]>{
 
 /** 30 requests */
 export async function getTeamSeasonStats(year: string): Promise<TeamStatSeason[]>{
-    return getArray(
+    return getArrayMultipleRequests(
         templateTeamSeasonStats,
         endpoints().teams_season_statistics_rapid,
         false,
@@ -77,25 +77,27 @@ export async function getTeamSeasonStats(year: string): Promise<TeamStatSeason[]
 }
 /** requires gameID (max 12 reqs a day)
  * Get all game ids that were on yesterday from games table
+ * pass in date YYYY-MM-DD
  */
-export async function getTeamGameStats(): Promise<TeamStatGame[]>{
-    return getArray(
+export async function getTeamGameStats(date: string): Promise<TeamStatGame[]>{
+    return getArrayMultipleRequests(
         templateTeamGameStats,
         endpoints().teams_games_statistics_rapid,
-        false
-        // need to gather array of gameIDs
+        false,
+        {
+            date: date
+        }
     );
 }
 
 /** 30 requests */
 export async function getPlayerGameStatsByTeam(year: string): Promise <PlayerStatGame[]>{
-    return getArray(
+    return getArrayMultipleRequests(
         templatePlayerGameStat,
         endpoints().players_statistics_per_team_rapid,
         false,
         {
             season: year
         }
-        // need to gather array of teamIDs
     )
 }
