@@ -42,11 +42,18 @@ export async function getArrayMultipleRequests<T>(
     params?: any
     ):Promise<T[]>{
         var id_arr: number[] = [];
+
+        const byDate = params?.date !== undefined;
         if (isTeamSeasonStats(o)){
             id_arr = await getTeamIDs();
         }
         else if (isPlayerStatGame(o)){
-            id_arr = await getTeamIDs();
+            if (byDate){
+                id_arr = await getGameIDs(params?.date);
+            }
+            else {
+                id_arr = await getTeamIDs();
+            }
         }
         else {
             id_arr = await getGameIDs(params?.date);
@@ -55,7 +62,8 @@ export async function getArrayMultipleRequests<T>(
         var json_arr: JSON[] = [];
         for (const id in id_arr){
             const ops = isTeamSeasonStats(o) ? { season: params?.season, id: id_arr[id]} :
-                        isPlayerStatGame(o) ? { season: params?.season, team: id_arr[id]} :
+                        isPlayerStatGame(o) && byDate  ? { game: id_arr[id]} :
+                        isPlayerStatGame(o) && !byDate ? { season: params?.season, team: id_arr[id]} :
                         { id: id_arr[id] };
             const result = await fetch(endpoint, sportsDataApi, ops);
             preProcessJson(o, result, id_arr[id]);

@@ -94,10 +94,22 @@ export async function getTeamGameStats(date: string): Promise<TeamStatGame[]>{
 export async function getPlayerGameStatsByTeam(year: string): Promise <PlayerStatGame[]>{
     return getArrayMultipleRequests(
         templatePlayerGameStat,
-        endpoints().players_statistics_per_team_rapid,
+        endpoints().players_statistics_rapid,
         false,
         {
             season: year
+        }
+    )
+}
+
+/** max 12 requests */
+export async function getPlayerGameStatsByDate(date: string): Promise <PlayerStatGame[]>{
+    return getArrayMultipleRequests(
+        templatePlayerGameStat,
+        endpoints().players_statistics_rapid,
+        false,
+        {
+            date: date
         }
     )
 }
