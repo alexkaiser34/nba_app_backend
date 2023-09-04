@@ -5,7 +5,8 @@ import {
     getTeams,
     getTeamSeasonStats,
     getTeamGameStats,
-    getPlayerGameStatsByTeam
+    getPlayerGameStatsByTeam,
+    getPlayerGameStatsByDate
 } from "../api/api_endpoints";
 
 import {
@@ -57,7 +58,7 @@ export async function updateData<T,>(api_data: T, tableName: tableNames){
 }
 
 
-export async function apiToDB(tableName:tableNames,fnc: any, params?:string){
+async function apiToDB(tableName:tableNames,fnc: any, params?:string){
     const result = await fnc(params);
     console.log('updating....' + tableName);
     await updateData(result, tableName);
@@ -74,29 +75,50 @@ export async function dailyUpdate(){
     const date_string = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
 
     /** Players */
+    /** 30 request */
     await apiToDB('players', getPlayers, year);
 
     /** Teams */
+    /** 1 request */
     await apiToDB('teams', getTeams);
 
     /** Schedule */
+    /** 1 request */
     await apiToDB('games', getSchedule, year);
 
     /** Standings */
+    /** 1 request */
     await apiToDB('standings', getStandings, year);
 
     /** Team game stats */
+    /** MAX 12 requests */
     await apiToDB('teamGameStats', getTeamGameStats, date_string);
 
     /** Team Season stats */
+    /** 30 requests */
     await apiToDB('teamSeasonStats', getTeamSeasonStats, year);
 
     /** Player game stats */
-    /** Note: this takes a long time, may be worth while to use this at
-     * initializing data into database, then get player gameStats by gameID on a
-     * daily update
+    /** MAX 12 requests */
+    await apiToDB('playersGameStats', getPlayerGameStatsByDate, date_string);
+
+
+    /** Total Requests --> 87 per day out of 100 */
+
+}
+
+/** Handle all huge requests (seasons worth of player data) */
+export async function largeRequest() {
+    const currentTime = new Date();
+    const year = (currentTime.getMonth() + 1) > 9 ?
+            currentTime.getFullYear().toString() :
+            (currentTime.getFullYear()-1).toString();
+
+
+    /** player games stats for whole season
+     * can return over 20k data points for completed season
      */
-    // await apiToDB('playersGameStats', getPlayerGameStatsByTeam, year);
+    await apiToDB('playersGameStats', getPlayerGameStatsByTeam, year);
 
 }
 
