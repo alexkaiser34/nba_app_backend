@@ -1,7 +1,8 @@
 import { api_config } from "../../config";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import { preProcessJson } from "./json_helper";
+import { getGameIDs, getTeamIDs, preProcessJson } from "./json_helper";
 import { createObject, processObject } from "./object_helper";
+import { isPlayerStatGame, isTeamSeasonStats } from "./typeGuards";
 
 function hasNumber(myString) {
     return /\d/.test(myString);
@@ -32,6 +33,38 @@ export async function getArray<T>(
             reject(e);
         });
     })
+}
+
+export async function getArrayMultipleRequests<T>(
+    o:T,
+    endpoint: string,
+    sportsDataApi: boolean,
+    params?: any
+    ):Promise<T[]>{
+        var id_arr: number[] = [];
+        if (isTeamSeasonStats(o)){
+            id_arr = await getTeamIDs();
+        }
+        else if (isPlayerStatGame(o)){
+            id_arr = await getTeamIDs();
+        }
+        else {
+            id_arr = await getGameIDs(params?.date);
+        }
+
+        var json_arr: JSON[] = [];
+        for (const id in id_arr){
+            const ops = isTeamSeasonStats(o) ? { season: params?.season, id: id_arr[id]} :
+                        isPlayerStatGame(o) ? { season: params?.season, team: id_arr[id]} :
+                        { id: id_arr[id] };
+            const result = await fetch(endpoint, sportsDataApi, ops);
+            preProcessJson(o, result, id_arr[id]);
+            json_arr.push(result);
+        }
+
+        var t_arr = createObject(o, json_arr.flat());
+
+        return new Promise<T[]>((resolve, reject) => resolve(t_arr));
 }
 
 /** sportsDataAPI = true for sportsDataApi, else will use rapidAPI */

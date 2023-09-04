@@ -1,5 +1,6 @@
 import DataBaseActions from "../../db/classes/DataBaseActions";
-import { isGame } from "./typeGuards";
+import { templateTeamGameStats } from "../types/stats";
+import { isGame, isPlayerStatGame, isStanding, isTeamSeasonStats, isTeamStatGame } from "./typeGuards";
 
 
 export async function getTeamIDs():Promise<number[]>{
@@ -11,6 +12,24 @@ export async function getTeamIDs():Promise<number[]>{
                 teamIDs.push(item['TeamID'] as number);
             });
             resolve(teamIDs);
+        })
+        .catch((err) => reject(err));
+    });
+}
+
+export async function getGameIDs(date: string):Promise<number[]>{
+    return new Promise<number[]>((resolve, reject) => {
+        var gameIDs: number[] = [];
+        DataBaseActions.retrieveAllByCondition<any>(
+            'games',
+            'id',
+            `JSON_EXTRACT(date, '$.start') LIKE '%${date}%'`
+        )
+        .then((res) => {
+            res.forEach((item) => {
+                gameIDs.push(item['id'] as number);
+            });
+            resolve(gameIDs);
         })
         .catch((err) => reject(err));
     });
@@ -32,8 +51,66 @@ function updateGameJson(j:JSON){
     }
 }
 
-export function preProcessJson(o:any, j:JSON){
+function updateStandingsJson(j:JSON){
+    for (const item in j){
+        const TeamID = j[item]['team']['id'];
+        j[item]['TeamID'] = TeamID;
+        delete j[item]['team'];
+    }
+}
+
+function updateTeamSeasonStatsJson(j:JSON, teamId: number){
+    for (const item in j){
+        j[item]['TeamID'] = teamId;
+    }
+}
+
+function updatePlayerStatGameJson(j:JSON, teamId: number){
+    for (const item in j){
+        const playerID = j[item]['player']['id'];
+        const gameID = j[item]['game']['id'];
+        j[item]['PlayerID'] = playerID;
+        j[item]['TeamID'] = teamId;
+        j[item]['GameID']  = gameID;
+        delete j[item]['player'];
+        delete j[item]['team'];
+        delete j[item]['game'];
+
+    }
+}
+
+function updateTeamStatGameJson(j:JSON, gameID: number){
+    for (const item in j){
+        const teamID = j[item]['team']['id'];
+
+        Object.keys(templateTeamGameStats).forEach((key) => {
+            j[item][key as string] = j[item]['statistics'][0][key as string];
+        });
+
+        j[item]['TeamID'] = teamID;
+        j[item]['GameID']  = gameID;
+
+        delete j[item]['statistics'];
+        delete j[item]['team'];
+
+    }
+}
+
+
+export function preProcessJson(o:any, j:JSON, params?: any){
     if (isGame(o)){
         updateGameJson(j);
+    }
+    else if (isStanding(o)){
+        updateStandingsJson(j);
+    }
+    else if (isTeamSeasonStats(o)){
+        updateTeamSeasonStatsJson(j, params as number);
+    }
+    else if (isPlayerStatGame(o)){
+        updatePlayerStatGameJson(j, params as number);
+    }
+    else if (isTeamStatGame(o)){
+        updateTeamStatGameJson(j, params as number);
     }
 }
