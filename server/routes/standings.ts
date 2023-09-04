@@ -8,6 +8,9 @@ standingsRouter.get("/", (req, res) => {
     res.json({ message: "standings ok"});
 });
 
+/**
+ * { season: number, field?: fieldList}
+ */
 standingsRouter.get('/season/teamStandings', async function(req, res, next){
     try {
         res.json(
@@ -21,6 +24,9 @@ standingsRouter.get('/season/teamStandings', async function(req, res, next){
     }
 });
 
+/**
+ * { season: number, fieldValue: conference, field?: fieldList}
+ */
 standingsRouter.get('/season/conferenceStandings', async function(req, res, next){
     try {
         res.json(
@@ -35,6 +41,9 @@ standingsRouter.get('/season/conferenceStandings', async function(req, res, next
     }
 });
 
+/**
+ * { season: number, fieldValue: division, field?: fieldList}
+ */
 standingsRouter.get('/season/divisionStandings', async function(req, res, next){
     try {
         res.json(

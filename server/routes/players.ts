@@ -13,6 +13,9 @@ playerRouter.get("/", (req, res) => {
     res.json({ message: "players ok"});
 });
 
+/**
+ * { fields?: 'FieldNameList' }
+ */
 playerRouter.get('/getAll', async function(req, res, next){
     try {
         res.json(
@@ -27,6 +30,9 @@ playerRouter.get('/getAll', async function(req, res, next){
     }
 });
 
+/**
+ * { id: PlayerID, fields?: 'FieldNameList' }
+ */
 playerRouter.get('/getByPlayerID', async function(req,res,next){
     try {
         res.json(
@@ -42,6 +48,9 @@ playerRouter.get('/getByPlayerID', async function(req,res,next){
     }
 });
 
+/**
+ * { id: TeamID, fields?: 'FieldNameList' }
+ */
 playerRouter.get('/getByTeamID', async function(req,res,next){
     try {
         res.json(await getPlayersByTeam(req.body as requestID));
@@ -51,6 +60,9 @@ playerRouter.get('/getByTeamID', async function(req,res,next){
     }
 });
 
+/**
+ * { fieldValue: conferenceName, fields?: FieldNameList}
+ */
 playerRouter.get('/getByConference', async function(req,res,next){
     try {
         res.json(await getPlayersByConference(req.body as requestByString));
@@ -60,6 +72,9 @@ playerRouter.get('/getByConference', async function(req,res,next){
     }
 });
 
+/**
+ * { fieldValue: divisionName, fields?: FieldNameList}
+ */
 playerRouter.get('/getByDivision', async function(req,res,next){
     try {
         res.json(await getPlayersByDivision(req.body as requestByString));
@@ -70,7 +85,10 @@ playerRouter.get('/getByDivision', async function(req,res,next){
 });
 
 /**
- * FirstName={name} <AND/OR> LastName={name}
+ * {
+ *  fieldValue: "FirstName={name} <AND/OR> LastName={name}".
+ *  fields?: FieldNameList
+ * }
  * specify in above format, can do both or just one
  */
 playerRouter.get('/getByName', async function(req,res,next){

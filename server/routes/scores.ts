@@ -1,7 +1,7 @@
 import express from 'express';
 import { Game } from '../../backend/api/types/game';
 import { requestByString, requestID } from '../types/request';
-import { getByField, getByID } from '../services/common';
+import { getByField, getByID, getByJSONField } from '../services/common';
 import { getTeamScores } from '../services/scores';
 
 export const scoresRouter = express.Router();
@@ -10,12 +10,16 @@ scoresRouter.get("/", (req, res) => {
     res.json({ message: "scores ok"});
 });
 
+/**
+ * { fieldValue: date, fields?: fieldList }
+ */
 scoresRouter.get('/getByDay', async function(req, res, next){
     try {
         res.json(
-            await getByField<Game>(
+            await getByJSONField<Game>(
                 'games',
                 'date',
+                'start',
                 req.body as requestByString
             )
         );
@@ -25,6 +29,10 @@ scoresRouter.get('/getByDay', async function(req, res, next){
     }
 });
 
+/**
+ * { id: gameID, fields?: fieldList }
+ *
+ */
 scoresRouter.get('/getByGameID', async function(req, res, next){
     try {
         res.json(
@@ -40,6 +48,10 @@ scoresRouter.get('/getByGameID', async function(req, res, next){
     }
 });
 
+/**
+ * { id: teamID, fields?: fieldList }
+ *
+ */
 scoresRouter.get('/getByTeam', async function(req, res, next){
     try {
         res.json(

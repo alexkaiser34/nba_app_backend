@@ -43,12 +43,30 @@ export async function getByField<T,>(
             DataBaseActions.retrieveAllByCondition<T[]>(
                 tableName,
                 data.fields === undefined ? '*' : data.fields,
-                `${field as string}=${data.fieldValue}`
+                `${field as string}='${data.fieldValue}'`
             )
             .then((res) => resolve(res as T[]))
             .catch((err) => reject(err));
         });
 }
+
+export async function getByJSONField<T,>(
+    tableName: tableNames,
+    field: keyof T,
+    subfield: string,
+    data: requestByString
+    ): Promise<T[]>{
+        return new Promise<T[]>((resolve, reject) => {
+            DataBaseActions.retrieveAllByCondition<T[]>(
+                tableName,
+                data.fields === undefined ? '*' : data.fields,
+                `JSON_EXTRACT(${field as string},'$.${subfield}') LIKE '%${data.fieldValue}%'`
+            )
+            .then((res) => resolve(res as T[]))
+            .catch((err) => reject(err));
+        });
+}
+
 
 export async function getByMultipleCondition<T,>(
     tableName: tableNames,

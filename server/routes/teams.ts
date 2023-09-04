@@ -9,7 +9,9 @@ teamRouter.get("/", (req, res) => {
     res.json({ message: "teams ok"});
 });
 
-
+/**
+ * { fields?: 'FieldNameList' }
+ */
 teamRouter.get('/getAll', async function(req, res, next){
     try {
         res.json(
@@ -24,6 +26,9 @@ teamRouter.get('/getAll', async function(req, res, next){
     }
 });
 
+/**
+ * { id: TeamID, fields?: 'FieldNameList' }
+ */
 teamRouter.get('/getByTeamID', async function(req, res, next){
     try {
         res.json(
@@ -39,6 +44,9 @@ teamRouter.get('/getByTeamID', async function(req, res, next){
     }
 });
 
+/**
+ * { fieldValue: conferenceName, fields?: FieldNameList}
+ */
 teamRouter.get('/getByConference', async function(req,res,next){
     try {
         res.json(
@@ -54,6 +62,9 @@ teamRouter.get('/getByConference', async function(req,res,next){
     }
 });
 
+/**
+ * { fieldValue: divisionName, fields?: FieldNameList}
+ */
 teamRouter.get('/getByDivision', async function(req,res,next){
     try {
         res.json(
@@ -69,6 +80,9 @@ teamRouter.get('/getByDivision', async function(req,res,next){
     }
 });
 
+/**
+ * { fieldValue: teamName, fields?: FieldNameList}
+ */
 teamRouter.get('/getByName', async function(req,res,next){
     try {
         res.json(
