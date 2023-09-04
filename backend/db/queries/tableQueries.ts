@@ -46,7 +46,7 @@ export const createTeamSeasonStatsTable: string =
     points int, fgm int, fga int, fgp float,
     ftm int, fta int, ftp float, tpm int, tpa int, tpp float, offReb int,
     defReb int, totReb int, assists int, pFouls int, steals int, turnovers int,
-    blocks int, plusMinus int,
+    blocks int, plusMinus int, season int,
     TeamID int, fastBreakPoints int, pointsInPaint int, biggestLead int,
     secondChancePoints int, pointsOffTurnovers int, longestRun int, games int)`;
 

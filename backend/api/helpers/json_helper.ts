@@ -59,9 +59,10 @@ function updateStandingsJson(j:JSON){
     }
 }
 
-function updateTeamSeasonStatsJson(j:JSON, teamId: number){
+function updateTeamSeasonStatsJson(j:JSON, teamId: number, year: number){
     for (const item in j){
         j[item]['TeamID'] = teamId;
+        j[item]['season'] = year;
     }
 }
 
@@ -97,7 +98,7 @@ function updateTeamStatGameJson(j:JSON, gameID: number){
 }
 
 
-export function preProcessJson(o:any, j:JSON, params?: any){
+export function preProcessJson(o:any, j:JSON, params?: any, year?: any){
     if (isGame(o)){
         updateGameJson(j);
     }
@@ -105,7 +106,7 @@ export function preProcessJson(o:any, j:JSON, params?: any){
         updateStandingsJson(j);
     }
     else if (isTeamSeasonStats(o)){
-        updateTeamSeasonStatsJson(j, params as number);
+        updateTeamSeasonStatsJson(j, params as number, year as number);
     }
     else if (isPlayerStatGame(o)){
         updatePlayerStatGameJson(j, params as number);
