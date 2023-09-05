@@ -2,13 +2,13 @@ interface Stat{
     points: number,
     fgm: number,
     fga: number,
-    fgp: number | string,
+    fgp: string,
     ftm: number,
     fta: number,
-    ftp: number | string,
+    ftp: string,
     tpm: number,
     tpa: number,
-    tpp: number | string,
+    tpp: string,
     offReb: number,
     defReb: number,
     totReb: number,
@@ -17,7 +17,7 @@ interface Stat{
     steals: number,
     turnovers: number,
     blocks: number,
-    plusMinus: number | string
+    plusMinus: string
 }
 
 interface TeamStat extends Stat {
@@ -34,11 +34,11 @@ export interface PlayerStatGame extends Stat {
     PlayerID: number,
     GameID: number,
     TeamID: number,
-    min: number | string
+    min: string
 }
 
 export interface TeamStatGame extends TeamStat {
-    min: string | number,
+    min:  string,
     GameID: number
 }
 
@@ -66,7 +66,7 @@ const templateStat : Stat = {
     steals: 583,
     turnovers: 1075,
     blocks: 411,
-    plusMinus: -5
+    plusMinus: ''
 };
 
 const templateTeamStat:TeamStat = {
@@ -85,7 +85,7 @@ export const templatePlayerGameStat:PlayerStatGame = {
     PlayerID: 0,
     TeamID: 0,
     GameID: 0,
-    min: 0
+    min: ''
 };
 
 export const templateTeamSeasonStats:TeamStatSeason = {
@@ -96,6 +96,6 @@ export const templateTeamSeasonStats:TeamStatSeason = {
 
 export const templateTeamGameStats:TeamStatGame = {
     ...templateTeamStat,
-    min: 0,
+    min: '',
     GameID: 0
 };

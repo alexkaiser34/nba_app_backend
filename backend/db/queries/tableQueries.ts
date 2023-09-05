@@ -24,7 +24,7 @@ export const createTeamTable: string =
 export const createStandingsTable: string =
     `CREATE TABLE IF NOT EXISTS standings(
     TeamID int, season int, conference JSON, division JSON,
-    win JSON, loss JSON, gamesBehind int, streak int,
+    win JSON, loss JSON, gamesBehind VARCHAR(255), streak int,
     winStreak boolean, tieBreakerPoints int)`;
 
 export const createGamesTable: string =
@@ -35,30 +35,30 @@ export const createGamesTable: string =
 
 export const createPlayersGameStatsTable: string =
     `CREATE TABLE IF NOT EXISTS playersGameStats(
-    points int, fgm int, fga int, fgp float,
-    ftm int, fta int, ftp float, tpm int, tpa int, tpp float, offReb int,
+    points int, fgm int, fga int, fgp VARCHAR(255),
+    ftm int, fta int, ftp VARCHAR(255), tpm int, tpa int, tpp VARCHAR(255), offReb int,
     defReb int, totReb int, assists int, pFouls int, steals int, turnovers int,
-    blocks int, plusMinus int,
-    PlayerID int, GameID int, TeamID int, min int)`;
+    blocks int, plusMinus VARCHAR(255),
+    PlayerID int, GameID int, TeamID int, min VARCHAR(255))`;
 
 export const createTeamSeasonStatsTable: string =
     `CREATE TABLE IF NOT EXISTS teamSeasonStats(
-    points int, fgm int, fga int, fgp float,
-    ftm int, fta int, ftp float, tpm int, tpa int, tpp float, offReb int,
+    points int, fgm int, fga int, fgp VARCHAR(255),
+    ftm int, fta int, ftp VARCHAR(255), tpm int, tpa int, tpp VARCHAR(255), offReb int,
     defReb int, totReb int, assists int, pFouls int, steals int, turnovers int,
-    blocks int, plusMinus int, season int,
+    blocks int, plusMinus VARCHAR(255), season int,
     TeamID int, fastBreakPoints int, pointsInPaint int, biggestLead int,
     secondChancePoints int, pointsOffTurnovers int, longestRun int, games int)`;
 
 export const createTeamGameStatsTable: string =
     `CREATE TABLE IF NOT EXISTS teamGameStats(
-    points int, fgm int, fga int, fgp float,
-    ftm int, fta int, ftp float, tpm int, tpa int, tpp float, offReb int,
+    points int, fgm int, fga int, fgp VARCHAR(255),
+    ftm int, fta int, ftp VARCHAR(255), tpm int, tpa int, tpp VARCHAR(255), offReb int,
     defReb int, totReb int, assists int, pFouls int, steals int, turnovers int,
-    blocks int, plusMinus int,
+    blocks int, plusMinus VARCHAR(255),
     TeamID int, fastBreakPoints int, pointsInPaint int, biggestLead int,
     secondChancePoints int, pointsOffTurnovers int, longestRun int,
-    min int, GameID int)`;
+    min VARCHAR(255), GameID int)`;
 
 export const createUserTable: string =
     `CREATE TABLE IF NOT EXISTS users(

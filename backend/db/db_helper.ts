@@ -1,4 +1,3 @@
-import DataBaseActions from "./classes/DataBaseActions";
 import _ from "lodash";
 import { tableNames } from "./queries/tableQueries";
 
@@ -163,27 +162,10 @@ function IsNotInDatabase<T>(api:T, db:any): boolean {
     });
 }
 
-export async function getUniqueEntries<T>(api: T, tableName: tableNames) : Promise<T>{
-
-    return new Promise<T>((resolve, reject) => {
-        DataBaseActions.retrieveAll<T>(tableName)
-        .then((db) =>{
-            const isApiArr = Array.isArray(api);
-            if (isApiArr){
-                resolve(getDatabaseDifference(api,db));
-            }
-            else {
-                if (IsNotInDatabase(api, db)){
-                    resolve(api);
-                }
-                else {
-                    resolve([] as T);
-                }
-            }
-        })
-        .catch((err) => {
-            reject(err);
-        });
-    });
-
+export async function getUniqueEntries<T>(
+    api: T[],
+    db: T[]
+    ) : Promise<T[]>{
+    const unique = getDatabaseDifference(api, db);
+    return new Promise<T[]>((resolve, reject) => resolve(unique as T[]));
 };

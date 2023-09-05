@@ -62,21 +62,23 @@ function updateStandingsJson(j:JSON){
 function updateTeamSeasonStatsJson(j:JSON, teamId: number, year: number){
     for (const item in j){
         j[item]['TeamID'] = teamId;
-        j[item]['season'] = year;
+        j[item]['season'] = Number(year);
+        const tmp = j[item]['plusMinus'];
+        j[item]['plusMinus'] = tmp.toString();
     }
 }
 
-function updatePlayerStatGameJson(j:JSON, teamId: number){
+function updatePlayerStatGameJson(j:JSON){
     for (const item in j){
         const playerID = j[item]['player']['id'];
         const gameID = j[item]['game']['id'];
+        const nTeamID = j[item]['team']['id'];
+        j[item]['TeamID'] = nTeamID;
         j[item]['PlayerID'] = playerID;
-        j[item]['TeamID'] = teamId;
         j[item]['GameID']  = gameID;
         delete j[item]['player'];
         delete j[item]['team'];
         delete j[item]['game'];
-
     }
 }
 
@@ -109,7 +111,7 @@ export function preProcessJson(o:any, j:JSON, params?: any, year?: any){
         updateTeamSeasonStatsJson(j, params as number, year as number);
     }
     else if (isPlayerStatGame(o)){
-        updatePlayerStatGameJson(j, params as number);
+        updatePlayerStatGameJson(j);
     }
     else if (isTeamStatGame(o)){
         updateTeamStatGameJson(j, params as number);
