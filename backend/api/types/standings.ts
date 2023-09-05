@@ -5,14 +5,14 @@ interface standingsConference{
     loss: number
 }
 interface standingsDivision extends standingsConference{
-    gamesBehind: number | null
+    gamesBehind: string,
 }
 
 interface standingsStat {
     home: number,
     away: number,
     total: number,
-    percentage: number,
+    percentage: string,
     lastTen: number
 }
 export interface Standings{
@@ -22,7 +22,7 @@ export interface Standings{
     division: standingsDivision,
     win: standingsStat,
     loss: standingsStat,
-    gamesBehind: number | null,
+    gamesBehind:  string,
     streak: number,
     winStreak: boolean,
     tieBreakerPoints: number | null
@@ -42,23 +42,23 @@ export const templateStandings: Standings = {
         rank: 0,
         win: 0,
         loss: 0,
-        gamesBehind: 0
+        gamesBehind: ''
     },
     win: {
         home: 0,
         away: 0,
         total: 0,
-        percentage: 0,
+        percentage: '',
         lastTen: 0
     },
     loss: {
         home: 0,
         away: 0,
         total: 0,
-        percentage: 0,
+        percentage: '',
         lastTen: 0
     },
-    gamesBehind: 0,
+    gamesBehind: '',
     streak: 0,
     winStreak: false,
     tieBreakerPoints: 0

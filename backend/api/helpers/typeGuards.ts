@@ -5,17 +5,28 @@ import { PlayerStatGame, TeamStatGame, TeamStatSeason } from "../types/stats";
 import { Team } from "../types/team";
 
 
-
 export function isPlayer(object: any): object is Player {
     return 'College' in object;
 }
 
 export function isPlayerStatGame(object: any): object is PlayerStatGame {
-    return 'PlayerID' in object;
+    if ('min' in object){
+        if('PlayerID' in object){
+            return true;
+        }
+    }
+
+    return false;
 }
 
 export function isTeamStatGame(object: any): object is TeamStatGame {
-    return 'min' in object;
+    if('min' in object){
+        if (!('PlayerID' in object)){
+            return true;
+        }
+    }
+
+    return false;
 }
 
 export function isStanding(object: any): object is Standings {

@@ -22,46 +22,85 @@ import {
  } from "./queries/tableQueries";
 
 import DataBaseActions from "./classes/DataBaseActions";
-import { getMonthStr, getUniqueEntries } from "./db_helper";
+import { getUniqueEntries } from "./db_helper";
+import { PlayerStatGame, TeamStatGame, TeamStatSeason } from "../api/types/stats";
+import { Player } from "../api/types/player";
+import {
+    db_getGameStatsByDate,
+    db_getGameStatsPlayer,
+    db_getPlayers,
+    db_getSchedule,
+    db_getStandings,
+    db_getTeamGameStats,
+    db_getTeams,
+    db_getTeamSeasonStats
+} from "./db_endpoints";
+import { Team } from "../api/types/team";
+import { Game } from "../api/types/game";
+import { Standings } from "../api/types/standings";
+import { isPlayerStatGame } from "../api/helpers/typeGuards";
 
 
 /**
- * We know the first element in each object is the ID...
  * For now, dont return any promise data as its not entirely useful
  */
-export async function updateData<T,>(api_data: T, tableName: tableNames){
-    const unique = await getUniqueEntries(api_data, tableName);
+export async function updateData<T,>(api_data: T[], db_data: T[], id: keyof T, tableName: tableNames){
+    const unique = await getUniqueEntries(api_data, db_data);
 
-    const dbEntries = await DataBaseActions.retrieveAll<T>(tableName);
     let id_arr: number[] = [];
-    dbEntries.forEach((entry) => {
-        id_arr.push(entry[Object.keys(entry)[0]])
+    db_data.forEach((entry) => {
+        id_arr.push(entry[id as string]);
     });
 
-    for (const item in unique){
-        let needsUpdate = false;
-        if (id_arr.includes(unique[item][Object.keys(unique[item])[0]])){
-            needsUpdate = true;
-        }
+    var save_arr : T[] = [];
 
-        if (needsUpdate){
-            await DataBaseActions.update(
-                unique[item] as T,
-                Object.keys(unique[item])[0],
-                tableName
-            );
+    for (const item in unique){
+        if (id_arr.includes(unique[item][id as string])){
+            if (isPlayerStatGame(unique[item])){
+                for (const d in db_data){
+                    if ((db_data[d]['PlayerID'] === unique[item]['PlayerID']) &&
+                        (db_data[d][id as string] === unique[item][id as string])){
+                            await DataBaseActions.update(
+                                unique[item] as T,
+                                id as string,
+                                tableName
+                            );
+                            break;
+                        }
+                }
+            }
+            else {
+                await DataBaseActions.update(
+                    unique[item] as T,
+                    id as string,
+                    tableName
+                );
+            }
         }
         else {
-            await DataBaseActions.save(unique[item], tableName);
+            save_arr.push(unique[item]);
         }
+    }
+
+    if (save_arr.length > 0){
+        await DataBaseActions.save(save_arr, tableName);
     }
 }
 
 
-async function apiToDB(tableName:tableNames,fnc: any, params?:string){
-    const result = await fnc(params);
+
+async function apiToDB<T,>(
+    tableName:tableNames,
+    api_fnc: any,
+    db_func:any,
+    id: keyof T,
+    params?: string,
+    ){
+    const api_result = await api_fnc(params) as T[];
+    const db_result = await db_func(params) as T[];
     console.log('updating....' + tableName);
-    await updateData(result, tableName);
+
+    await updateData(api_result, db_result, id, tableName);
 }
 
 export async function dailyUpdate(){
@@ -74,34 +113,75 @@ export async function dailyUpdate(){
     const day = currentTime.getDate().toString();
     const date_string = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
 
+
     /** Players */
     /** 30 request */
-    await apiToDB('players', getPlayers, year);
+    await apiToDB<Player>(
+        'players',
+        getPlayers,
+        db_getPlayers,
+        'PlayerID',
+        year
+    );
 
     /** Teams */
     /** 1 request */
-    await apiToDB('teams', getTeams);
+    await apiToDB<Team>(
+        'teams',
+        getTeams,
+        db_getTeams,
+        'TeamID'
+    );
 
     /** Schedule */
     /** 1 request */
-    await apiToDB('games', getSchedule, year);
+    await apiToDB<Game>(
+        'games',
+        getSchedule,
+        db_getSchedule,
+        'id',
+        year
+    );
 
     /** Standings */
     /** 1 request */
-    await apiToDB('standings', getStandings, year);
+    await apiToDB<Standings>(
+        'standings',
+        getStandings,
+        db_getStandings,
+        'TeamID',
+        year
+    );
 
     /** Team game stats */
     /** MAX 12 requests */
-    await apiToDB('teamGameStats', getTeamGameStats, date_string);
+    await apiToDB<TeamStatGame>(
+        'teamGameStats',
+        getTeamGameStats,
+        db_getTeamGameStats,
+        'TeamID',
+        date_string
+    );
 
     /** Team Season stats */
     /** 30 requests */
-    await apiToDB('teamSeasonStats', getTeamSeasonStats, year);
+    await apiToDB<TeamStatSeason>(
+        'teamSeasonStats',
+        getTeamSeasonStats,
+        db_getTeamSeasonStats,
+        'TeamID',
+        year
+    );
 
     /** Player game stats */
     /** MAX 12 requests */
-    await apiToDB('playersGameStats', getPlayerGameStatsByDate, date_string);
-
+    await apiToDB<PlayerStatGame>(
+        'playersGameStats',
+        getPlayerGameStatsByDate,
+        db_getGameStatsByDate,
+        'PlayerID',
+        date_string
+    );
 
     /** Total Requests --> 87 per day out of 100 */
 
@@ -118,7 +198,13 @@ export async function largeRequest() {
     /** player games stats for whole season
      * can return over 20k data points for completed season
      */
-    await apiToDB('playersGameStats', getPlayerGameStatsByTeam, year);
+    await apiToDB<PlayerStatGame>(
+        'playersGameStats',
+        getPlayerGameStatsByTeam,
+        db_getGameStatsPlayer,
+        'GameID',
+        year
+    );
 
 }
 
