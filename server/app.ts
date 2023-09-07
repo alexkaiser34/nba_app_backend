@@ -1,4 +1,5 @@
 import express, { Express, Request, Response } from 'express';
+import cors from 'cors';
 import { playerRouter } from './routes/players';
 import { standingsRouter } from './routes/standings';
 import { teamRouter } from './routes/teams';
@@ -9,6 +10,8 @@ import { currentRouter } from './routes/current';
 const PORT = process.env.PORT || '3000';
 
 const app:Express = express();
+
+app.use(cors());
 
 app.use(express.json());
 
