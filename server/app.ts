@@ -4,6 +4,7 @@ import { standingsRouter } from './routes/standings';
 import { teamRouter } from './routes/teams';
 import { scoresRouter } from './routes/scores';
 import { statsRouter } from './routes/stats';
+import { currentRouter } from './routes/current';
 
 const PORT = process.env.PORT || '3000';
 
@@ -18,7 +19,7 @@ app.use(
 );
 
 app.get("/", (req:Request, res:Response) => {
-    res.json({ message: "alex is cool cat"});
+    res.json({ message: "nba app server ok"});
 });
 
 app.use("/players", playerRouter);
@@ -26,6 +27,7 @@ app.use("/teams", teamRouter);
 app.use("/standings", standingsRouter);
 app.use("/scores", scoresRouter);
 app.use("/stats", statsRouter);
+app.use("/current", currentRouter);
 
 /* Error handler middleware */
 app.use((err, req:Request, res:Response, next) => {
