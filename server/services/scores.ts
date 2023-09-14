@@ -1,20 +1,18 @@
 import { Game } from "../../backend/api/types/game";
 import { Team } from "../../backend/api/types/team";
 import DataBaseActions from "../../backend/db/classes/DataBaseActions";
-import { requestID } from "../types/request";
 
 type teamScore = (Game & Team)[];
 
-export async function getTeamScores(team: requestID):Promise<teamScore>{
+export async function getTeamScores(team: number):Promise<teamScore>{
     return new Promise<teamScore>((resolve, reject) => {
-        const fields = team.fields === undefined ? 'games.*' : team.fields;
         DataBaseActions.retrieveAllByJoin<teamScore>(
             'games',
-            fields,
+            'games.*',
             'teams',
             'INNER',
             "teams.TeamID = JSON_EXTRACT(games.teams, '$.awayTeamID') OR teams.TeamID = JSON_EXTRACT(games.teams, '$.homeTeamID')",
-            `TeamID=${team.id}`
+            `TeamID=${team}`
         )
         .then((res) => resolve(res as teamScore))
         .catch((err) => reject(err));
