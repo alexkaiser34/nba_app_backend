@@ -7,8 +7,6 @@ import {
 } from "../../backend/api/types/stats";
 import { Team } from "../../backend/api/types/team";
 import DataBaseActions from "../../backend/db/classes/DataBaseActions";
-import { requestID } from "../types/request";
-
 
 export type allStats =
     TeamStatGame |
@@ -26,13 +24,13 @@ export interface BoxScore {
 /** For now, make queries from multiple tables so we can separate data
  * into individual objects
  */
-export async function getBoxScore(id: requestID){
+export async function getBoxScore(id: number){
     const res = {} as BoxScore;
 
     const tmp = await DataBaseActions.retrieveAllByCondition<Game>(
         'games',
         '*',
-        `id=${id.id}`
+        `id=${id}`
     );
 
     /** only expect 1 element due to gameID being a unique key */
@@ -53,13 +51,13 @@ export async function getBoxScore(id: requestID){
     res.teamGameStats = await DataBaseActions.retrieveAllByCondition<TeamStatGame>(
         'teamGameStats',
         '*',
-        `GameID=${id.id}`
+        `GameID=${id}`
     ) as TeamStatGame;
 
     res.playerGameStats = await DataBaseActions.retrieveAllByCondition<PlayerStatGame>(
         'playersGameStats',
         '*',
-        `GameID=${id.id}`
+        `GameID=${id}`
     ) as PlayerStatGame;
 
 

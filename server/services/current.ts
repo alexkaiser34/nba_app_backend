@@ -14,7 +14,7 @@ export async function getCurrentBoxScores(){
 
     var boxScores: BoxScore[] = [];
     for (const id in gameIDs){
-        boxScores.push(await getBoxScore({id: gameIDs[id]}));
+        boxScores.push(await getBoxScore(gameIDs[id]));
     }
 
     return boxScores;

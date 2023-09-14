@@ -1,16 +1,13 @@
 import DataBaseActions from "../../backend/db/classes/DataBaseActions";
 import { tableNames } from "../../backend/db/queries/tableQueries";
-import { requestAll, requestID, requestByString, requestByCondition } from "../types/request";
 
 
 export async function getAll<T,>(
-    tableName: tableNames,
-    fieldNames?: requestAll
+    tableName: tableNames
     ): Promise<T[]>{
         return new Promise<T[]>((resolve, reject) => {
             DataBaseActions.retrieveAll<T[]>(
-                tableName,
-                fieldNames?.fields
+                tableName
             )
             .then((res) => resolve(res as T[]))
             .catch((err) => reject(err));
@@ -21,13 +18,13 @@ export async function getAll<T,>(
 export async function getByID<T,>(
     tableName: tableNames,
     idField: keyof T,
-    id: requestID
+    id: number
     ): Promise<T[]>{
         return new Promise<T[]>((resolve, reject) => {
             DataBaseActions.retrieveAllByCondition<T[]>(
                 tableName,
-                id.fields === undefined ? '*' : id.fields,
-                `${idField as string}=${id.id}`
+                '*',
+                `${idField as string}=${id}`
             )
             .then((res) => resolve(res as T[]))
             .catch((err) => reject(err));
@@ -37,13 +34,13 @@ export async function getByID<T,>(
 export async function getByField<T,>(
     tableName: tableNames,
     field: keyof T,
-    data: requestByString
+    data: string
     ): Promise<T[]>{
         return new Promise<T[]>((resolve, reject) => {
             DataBaseActions.retrieveAllByCondition<T[]>(
                 tableName,
-                data.fields === undefined ? '*' : data.fields,
-                `${field as string}='${data.fieldValue}'`
+                '*',
+                `${field as string}='${data}'`
             )
             .then((res) => resolve(res as T[]))
             .catch((err) => reject(err));
@@ -54,13 +51,13 @@ export async function getByJSONField<T,>(
     tableName: tableNames,
     field: keyof T,
     subfield: string,
-    data: requestByString
+    data: string
     ): Promise<T[]>{
         return new Promise<T[]>((resolve, reject) => {
             DataBaseActions.retrieveAllByCondition<T[]>(
                 tableName,
-                data.fields === undefined ? '*' : data.fields,
-                `JSON_EXTRACT(${field as string},'$.${subfield}') LIKE '%${data.fieldValue}%'`
+                '*',
+                `JSON_EXTRACT(${field as string},'$.${subfield}') LIKE '%${data}%'`
             )
             .then((res) => resolve(res as T[]))
             .catch((err) => reject(err));
@@ -70,13 +67,13 @@ export async function getByJSONField<T,>(
 
 export async function getByMultipleCondition<T,>(
     tableName: tableNames,
-    data: requestByCondition
+    data: string
     ): Promise<T[]>{
         return new Promise<T[]>((resolve, reject) => {
             DataBaseActions.retrieveAllByCondition<T[]>(
                 tableName,
-                data.fields === undefined ? '*' : data.fields,
-                data.conditions
+                '*',
+                data
             )
             .then((res) => resolve(res as T[]))
             .catch((err) => reject(err));
@@ -89,13 +86,13 @@ export async function getByMultipleCondition<T,>(
  */
 export async function getByName<T,>(
     tableName: tableNames,
-    name: requestByString
+    name: string
     ): Promise<T[]>{
         return new Promise<T[]>((resolve, reject) => {
             DataBaseActions.retrieveAllByCondition<T[]>(
                 tableName,
-                name.fields === undefined ? '*' : name.fields,
-                name.fieldValue
+                '*',
+                name
             )
             .then((res) => resolve(res as T[]))
             .catch((err) => reject(err));

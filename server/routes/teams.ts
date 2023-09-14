@@ -1,23 +1,14 @@
 import express from 'express';
 import { Team } from '../../backend/api/types/team';
-import { getAll, getByField, getByID, getByName } from '../services/common';
-import { requestAll, requestID, requestByString } from '../types/request';
+import { getAll, getByField, getByID } from '../services/common';
 
 export const teamRouter = express.Router();
 
-teamRouter.get("/", (req, res) => {
-    res.json({ message: "teams ok"});
-});
-
-/**
- * { fields?: 'FieldNameList' }
- */
-teamRouter.get('/getAll', async function(req, res, next){
+teamRouter.get('/', async function(req, res, next){
     try {
         res.json(
             await getAll<Team>(
-                'teams',
-                req.body as requestAll
+                'teams'
             )
         );
     } catch(err) {
@@ -26,16 +17,14 @@ teamRouter.get('/getAll', async function(req, res, next){
     }
 });
 
-/**
- * { id: TeamID, fields?: 'FieldNameList' }
- */
-teamRouter.get('/getByTeamID', async function(req, res, next){
+teamRouter.get('/:id', async function(req, res, next){
     try {
+        const id = req.params.id;
         res.json(
             await getByID<Team>(
                 'teams',
                 'TeamID',
-                req.body as requestID
+                Number(id)
             )
         );
     } catch(err) {
@@ -44,16 +33,14 @@ teamRouter.get('/getByTeamID', async function(req, res, next){
     }
 });
 
-/**
- * { fieldValue: conferenceName, fields?: FieldNameList}
- */
-teamRouter.get('/getByConference', async function(req,res,next){
+teamRouter.get('/conference/:name', async function(req,res,next){
     try {
+        const name = req.params.name;
         res.json(
             await getByField<Team>(
                 'teams',
                 'Conference',
-                req.body as requestByString
+                name
             )
         );
     } catch(err){
@@ -62,16 +49,14 @@ teamRouter.get('/getByConference', async function(req,res,next){
     }
 });
 
-/**
- * { fieldValue: divisionName, fields?: FieldNameList}
- */
-teamRouter.get('/getByDivision', async function(req,res,next){
+teamRouter.get('/division/:name', async function(req,res,next){
     try {
+        const name = req.params.name;
         res.json(
             await getByField<Team>(
                 'teams',
                 'Division',
-                req.body as requestByString
+                name
             )
         );
     } catch(err){
@@ -80,16 +65,14 @@ teamRouter.get('/getByDivision', async function(req,res,next){
     }
 });
 
-/**
- * { fieldValue: teamName, fields?: FieldNameList}
- */
-teamRouter.get('/getByName', async function(req,res,next){
+teamRouter.get('/teamName/:name', async function(req,res,next){
     try {
+        const name = req.params.name;
         res.json(
             await getByField<Team>(
                 'teams',
                 'Name',
-                req.body as requestByString
+                name
             )
         );
     } catch(err){
